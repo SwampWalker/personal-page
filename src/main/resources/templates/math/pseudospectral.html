@@ -1,0 +1,116 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pseudospectral methods</title>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Pseudospectral methods</h1>
+    <p>
+        This page introduces pseudospectral methods. In fact introductions to pseudo spectral methods are already quite
+        prevalent, a good introduction can be found online on
+        <a href="http://www-personal.umich.edu/~jpboyd/BOOK_Spectral2000.html">the academic homepage of the author, John
+            P. Boyd.</a>
+        This page is mostly an entry of convenience for myself, to remind myself of certain results and as a proof of
+        concept of the javascript libraries backing this page.
+    </p>
+
+    <h2>The Chebyshev polynomials</h2>
+
+    <p>
+        The Chebyshev polynomials form an interesting class of polynomials for use in solving differential equations
+        numerically using pseudospectral methods. The polynomials can be defined by the recurrence relation
+        <img class="numbered-equation" src="/images/math/chebyshevrecurrence.svg"/>
+        Although it is tempting to implement such an equation in code using recurrence directly, it is actually better
+        to convert the evaluation to an iteration. The above recurrence relationship can be implemented in Javascript
+        with the following code
+    </p>
+
+    <pre>
+    var ti = x;
+    var tiMinus1 = 1;
+    for (var i = 1; i &lt; n; i++) {
+        var tiPlus1 = 2*x*ti - tiMinus1;
+        tiMinus1 = ti;
+        ti = tiPlus1;
+    }
+    return ti;</pre>
+
+    <p>
+        The first few Chebyshev polynomials are plotted below, the values are computed directly by your browser!
+    </p>
+
+    <div class="plot-container">
+        <div id="bases" class="plot-placeholder"></div>
+    </div>
+
+    <h2>Interpolation and collocation with Chebyshev polynomials</h2>
+
+    <p>
+        In pseudospectral methods, functions of interest are approximated as interpolating polynomials. The
+        straightforward definition of a function arises by considering a function to be represented by its coefficients
+        <img src="/images/math/coefficient.svg"/> in an expansion over the basis polynomials
+        <img src="/images/math/basis.svg"/>. This creates an approximation
+        <img class="numbered-equation" src="/images/math/approximation.svg"/>
+        This representation of a function is an approximation due to the truncation of the series at fixed
+        <code>N</code>. Using the tools of analysis, one can represent certain classes of functions using the infinite
+        series representation in terms of the Chebyshev basis <img src="/images/math/basis.svg"/>. In numerical
+        analysis, the series is generally truncated. Because most functions cannot be represented exactly by a fixed
+        order polynomial, truncating the series leads to errors in the approximation. This source of error may be
+        distinguished from other types of errors and called the <strong>truncation error</strong> of the approximation.
+        Because most processes that produce an approximate function will not yield the exact values of <img
+            src="/images/math/coefficient.svg"/>, there are generally other forms of discretization errors present.
+    </p>
+
+    <p>
+        In practice, the so-called coefficient representation of the approximation is sometimes inconvenient to work
+        with. This leads to an alternate representation of the approximation which is referred to as the configuration:
+        <img src="/images/math/configuration.svg"/>. By definition, the configuration is just the value of the
+        approximation evaluated at special points known as collocation points. Two sets of collocation points are
+        frequently used, the roots
+        <img class="numbered-equation" src="/images/math/chebyshevroots.svg"/>
+        and the extrema
+        <img class="numbered-equation" src="/images/math/chebyshevextrema.svg"/>
+        Particular care should be taken in regards to ordering of the points. Above one can note that for <code>i</code>
+        small, one achieves large <code>x</code>. To illustrate these points, we can now create an approximation for the
+        exponential function and the logistic function represented by a configuration which is exact at the collocation
+        points.
+    </p>
+
+    <div class="plot-container">
+        <div id="collocations" class="plot-placeholder"></div>
+    </div>
+
+    <p>
+        The data producing the lines for the exponential and logistic function are sampled at a much higher rate than
+        the pseudospectral approximations since the plotting library would other wise produce a very crude
+        representation. One sees that the 10th order basis function produces 10 roots and 11 extrema. The extrema end
+        points are often used since this set of collocation points includes the boundaries enabling easy specification
+        of boundary conditions. The roots are useful in cases where regularity is desired: no explicit regularity
+        condition is necessary.
+    </p>
+
+    <p>
+        When using the configuration representation of an interpolating polynomial, the exact same approximation can
+        be represented in terms of a different polynomial basis, the Cardinal functions:
+        <img class="numbered-equation" src="/images/math/cardinalapproximation.svg"/>
+        While a closed form of the Cardinal functions can be given, it is not necessarily the most convenient method
+        for computing interpolated values of a function.
+    </p>
+
+</div>
+
+<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<div th:fragment="specific-js">
+    <script th:src="@{/webjars/flot/0.8.3/jquery.flot.min.js}"></script>
+    <script src="/js/inheritance.js"></script>
+    <script src="/js/equations.js"></script>
+    <script src="/js/chebyshev.js"></script>
+    <script src="/js/page-specific/pseudospectral.js"/>
+</div>
+</body>
+</html>

@@ -56,7 +56,7 @@ public class EquationImageMaker {
             new File(tex.getAbsolutePath().replaceAll("\\.tex", ".aux")).delete();
             new File(tex.getAbsolutePath().replaceAll("\\.tex", ".log")).delete();
 
-            executeProcess("dvisvgm", dvi);
+            executeProcess("dvisvgm -n", dvi);
         } catch (IOException e) {
             LOGGER.error("Couldn't create image for equation " + property, e);
         }
