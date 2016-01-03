@@ -1,0 +1,52 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chebyshev polynomials</title>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>The Chebyshev polynomials</h1>
+
+    <p>
+        The Chebyshev polynomials form an interesting class of polynomials for use in solving differential equations
+        numerically using pseudo-spectral methods. The polynomials can be defined by the simple recurrence relation
+        <img class="numbered-equation" src="/images/math/chebyshevrecurrence.svg"/>
+        Although it is tempting to implement such an equation in code using recurrence directly, it is actually better
+        to convert the evaluation to an iteration. The above recurrence relationship can be implemented in Javascript
+        with the following code
+    </p>
+
+    <pre>
+    var ti = x;
+    var tiMinus1 = 1;
+    for (var i = 1; i &lt; n; i++) {
+        var tiPlus1 = 2*x*ti - tiMinus1;
+        tiMinus1 = ti;
+        ti = tiPlus1;
+    }
+    return ti;</pre>
+
+    <p>
+        The first few Chebyshev polynomials are plotted below, the values are computed directly by your browser!
+    </p>
+
+    <div class="plot-container">
+        <div id="placeholder" class="plot-placeholder"></div>
+    </div>
+
+</div>
+
+<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<div th:fragment="specific-js">
+    <script th:src="@{/webjars/flot/0.8.3/jquery.flot.min.js}"></script>
+    <script src="/js/inheritance.js"></script>
+    <script src="/js/equations.js"></script>
+    <script src="/js/chebyshev.js"></script>
+    <script src="/js/page-specific/chebyshev.js"/>
+</div>
+</body>
+</html>
