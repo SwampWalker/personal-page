@@ -17,6 +17,7 @@ public class EquationImageMaker {
     private final File baseDir;
     private static final Logger LOGGER = Logger.getLogger(EquationImageMaker.class);
     private static byte[] LATEX_PREFIX = ("\\documentclass{article}\n" +
+            "\\usepackage{amssymb}\n" +
             "\\pagestyle{empty}\n" +
             "\\begin{document}\n" +
             "$").getBytes(StandardCharsets.UTF_8);

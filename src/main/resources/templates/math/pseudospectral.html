@@ -101,6 +101,27 @@
         for computing interpolated values of a function.
     </p>
 
+    <h2>Derivatives with the configuration</h2>
+
+    <p>
+        From now on we specialize to the configuration representation.
+    </p>
+
+    <p>
+        For me, a fascinating point of numerical methods comes about from the realization that in calculus, the
+        derivative is a linear operator. The axioms of a linear operator are well known and can be <a
+            href="https://en.wikipedia.org/wiki/Linear_map#Definition_and_first_consequences">quickly looked up</a>
+        although it may be more authoritative to use a text book. By choosing to isolate our problem to a particular
+        vector space, in particular <img src="/images/math/polynomialspace.svg"/>, the linear derivative operator can
+        automatically be represented exactly by a particular matrix; differentiation is equivalent to multiplication by
+        this matrix. The exact structure of the matrix will depend on the basis chosen to represent polynomials in <img
+            src="/images/math/polynomialspace.svg"/>. Of
+        course, since the interpolating polynomial is an approximation of the true function of interest, the derivative
+        is itself an approximation of the true derivative of interest. The derivative is exact in the sense that it
+        is the exact derivative of the interpolating polynomial. The differentiation matrix can be derived by following
+        the discussion in Fundamentals of Engineering Numerical Analysis, (by Parviz Moin) exercise
+    </p>
+
 </div>
 
 <script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>

@@ -82,12 +82,12 @@
         {
             data: extremaOnT,
             points: {show: true},
-            color: 0
+            color: 2
         },
         {
             data: rootsOnT,
             points: {show: true},
-            color: 0
+            color: 1
         },
         {
             label: "exp(x) evaluated on roots, centred",
