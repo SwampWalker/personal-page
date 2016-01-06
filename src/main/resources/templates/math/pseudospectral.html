@@ -114,12 +114,47 @@
         although it may be more authoritative to use a text book. By choosing to isolate our problem to a particular
         vector space, in particular <img src="/images/math/polynomialspace.svg"/>, the linear derivative operator can
         automatically be represented exactly by a particular matrix; differentiation is equivalent to multiplication by
-        this matrix. The exact structure of the matrix will depend on the basis chosen to represent polynomials in <img
+        this matrix: <img src="/images/math/linearderivative.svg"/>. The exact structure of the matrix will depend on
+        the basis chosen to represent polynomials in <img
             src="/images/math/polynomialspace.svg"/>. Of
         course, since the interpolating polynomial is an approximation of the true function of interest, the derivative
         is itself an approximation of the true derivative of interest. The derivative is exact in the sense that it
         is the exact derivative of the interpolating polynomial. The differentiation matrix can be derived by following
-        the discussion in Fundamentals of Engineering Numerical Analysis, (by Parviz Moin) exercise
+        the discussion in Fundamentals of Engineering Numerical Analysis, (by Parviz Moin) exercise 19 of chapter 6. The
+        elements of the differentiation matrix for a configuration using the collocation points of the extrema is given
+        by
+        <img class="numbered-equation" src="/images/math/extremadiff.svg"/>
+        with coefficients given by
+        <img class="numbered-equation" src="/images/math/extremadiffcoeffs.svg"/>
+        The above mentioned exercise should really be followed so that one can also compute the coefficients of the
+        differentiation matrix when the configuration is given using the collocation points of the roots
+        <img class="numbered-equation" src="/images/math/rootsdiff.svg"/>
+    </p>
+
+    <h2>Solving differential equations with pseudospectral approximations</h2>
+
+    <p>
+        A general first order differential equation can be written in the extremely abstract functional form: <img
+            class="numbered-equation" src="/images/math/functionalproblem.svg"/> Since linear problems are generally
+        tractable and nonlinear problems are generally not, provided that the Gâteaux derivative of the functional is
+        linear, then Newton's method can be used to repeatedly improve on a guess via <img
+            src="/images/math/delta.svg"/>. This leads to a series of linear problems
+        <img class="numbered-equation" src="/images/math/linearproblem.svg"/>
+        The linearity of the Gâteaux is necessary to expand the functional in this manner. The easiest way to compute
+        the derivative is using the definition of the derivative <img class="numbered-equation"
+                                                                      src="/images/math/derivativedefinition.svg"/>
+        which will be linear for a lot of problems of interest.
+    </p>
+
+    <p>
+        As a straightforward, non-trivial example. We will solve the logistic equation above. The logistic equation is a
+        simple equation for population growth which is more realistic than naive exponential models. In the logistic
+        model, the growth is proportional to population, but as the population approaches the carrying capacity the
+        growth slows down. Since I want to display the full behavior, as above I will choose a large growth factor. The
+        logistic model is given by <img class="numbered-equation" src="/images/math/logistic.svg"/> Due to the fact that
+        the equation is non-linear, a direct solution is not possible. The Gâteaux derivative of this logistic equation
+        can be computed
+        <img class="numbered-equation" src="/images/math/dlogistic.svg"/>
     </p>
 
 </div>
