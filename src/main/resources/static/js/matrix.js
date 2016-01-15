@@ -1,6 +1,8 @@
 function Matrix(N) {
     this.rank = N;
     this.pivots = [];
+    this.luFactored = false;
+
     for (var i = 0; i < N; i++) {
         this.pivots[i] = i;
         this[i] = [];
@@ -13,6 +15,28 @@ function Matrix(N) {
 Matrix.prototype = new Array;
 
 /**
+ * Solves the equation Ax = b, by LU factoring then solving Ly = b, Ux = y. The input argument b is
+ * replaced with the solution on exit.
+ *
+ * @param b The right hand side on entrance, the solution on exit.
+ */
+Matrix.prototype.solve = function(b) {
+    if (!this.luFactored) {
+        this.factorLU();
+    }
+    this.forwardSubstitute(b);
+    this.backSubstitute(b);
+    // Now we need to pivot the result.
+    var x = [];
+    for (var i = 0; i < x.length; i++) {
+        x[i] = b[this.pivots[i]];
+    }
+    for (var i = 0; i < x.length; i++) {
+        b[i] = x[i];
+    }
+}
+
+/**
  * LU factors the matrix.
  */
 Matrix.prototype.LUFactorize = function () {
@@ -22,9 +46,43 @@ Matrix.prototype.LUFactorize = function () {
         for (var iSubRow = iRow + 1; iSubRow < this.rank; iSubRow++) {
             this[this.pivots[iSubRow]][iRow] /= diagonal;
             for (var iColumn = iRow + 1; iColumn < this.rank; iColumn++) {
-                this[this.pivots[iSubRow]][iColumn] -= this[this.pivots[iSubRow]][iRow]*this[this.pivots[iRow]][iColumn];
+                this[this.pivots[iSubRow]][iColumn] -= this[this.pivots[iSubRow]][iRow] * this[this.pivots[iRow]][iColumn];
             }
         }
+    }
+    this.luFactored = true;
+};
+
+/**
+ * Performs forward substitution assuming a lower diagonal form of this matrix. Forward substitution
+ * solves the equation Ly = x, with L a lower triangular matrix (possibly pivoted) and x the input. The
+ * input x is overwritten with the solution y.
+ *
+ * @param x The right hand side on entrance, the solution y on exit.
+ */
+Matrix.prototype.forwardSubstitute = function (x) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
+        for (var iColumn = 0; iColumn < iRow; iColumn++) {
+            x[this.pivots[iRow]] -= this[this.pivots[iRow]][iColumn] * x[this.pivots[iColumn]];
+        }
+        if (!this.luFactored) {
+            x[this.pivots[iRow]] /= this[this.pivots[iRow]][iRow];
+        }
+    }
+};
+
+/**
+ * Solves the equation Uy = x, where U is an upper triangular matrix, using backwards substitution. The
+ * input x is overwritten with the solution y.
+ *
+ * @param x The right hand side on entrance, the solution y on exit.
+ */
+Matrix.prototype.backSubstitute = function (x) {
+    for (var iRow = this.rank - 1; iRow >= 0; iRow--) {
+        for (var iColumn = iRow + 1; iColumn < this.rank; iColumn++) {
+            x[this.pivots[iRow]] -= this[this.pivots[iRow]][iColumn] * x[this.pivots[iColumn]];
+        }
+        x[this.pivots[iRow]] /= this[this.pivots[iRow]][iRow];
     }
 };
 
@@ -58,7 +116,7 @@ Matrix.prototype.copy = function (a) {
     }
 };
 
-Matrix.prototype.print = function() {
+Matrix.prototype.print = function () {
     for (var i = 0; i < this.rank; i++) {
         console.log(this[i].toString());
     }
@@ -77,4 +135,13 @@ luMatrix.copy([
     [1. / 2, -2. / 7, -6. / 7, -2. / 7],
     [8, 7, 9, 5],
     [3. / 4, 7. / 4, 9. / 4, 17. / 4]
+]);
+
+uMatrix = new Matrix(5);
+uMatrix.copy([
+    [5, 1, 2, 3, 4],
+    [0, 4, 1, 2, 3],
+    [0, 0, 3, 1, 2],
+    [0, 0, 0, 2, 1],
+    [0, 0, 0, 0, 1]
 ]);
