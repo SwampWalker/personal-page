@@ -40,12 +40,36 @@
     return ti;</pre>
 
     <p>
-        The first few Chebyshev polynomials are plotted below, the values are computed directly by your browser!
+        The first few Chebyshev polynomials are plotted below, the values are computed directly by your browser! You can
+        change the range of the functions plotting and the sampling spacing.
     </p>
 
     <div class="plot-container">
         <div id="bases" class="plot-placeholder"></div>
     </div>
+    <form class="form-inline" href="#" id="sampleChebyshev">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon" id="minN-addon">Minimum n</span>
+                <input type="text" class="form-control" id="minN" name="minN" value="1" aria-describedby="minN-addon"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon" id="maxN-addon">Maximum n</span>
+                <input type="text" class="form-control" id="maxN" name="maxN" value="6" aria-describedby="maxN-addon"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon" id="delta-addon">Resolution</span>
+                <input type="text" class="form-control" id="delta" name="delta" value="0.02" aria-describedby="delta-addon"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Replot" onclick="sampleChebyshev();return false;"/>
+        </div>
+    </form>
 
     <h2>Interpolation and collocation with Chebyshev polynomials</h2>
 
@@ -163,11 +187,12 @@
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 <div th:fragment="specific-js">
     <script th:src="@{/webjars/flot/0.8.3/jquery.flot.min.js}"></script>
-    <script src="/js/inheritance.js"></script>
-    <script src="/js/equations.js"></script>
-    <script src="/js/matrix.js"></script>
-    <script src="/js/chebyshev.js"></script>
-    <script src="/js/page-specific/pseudospectral.js"/>
+    <script src="../../static/js/inheritance.js" th:src="@{/js/inheritance.js}"></script>
+    <script src="../../static/js/equations.js" th:src="@{/js/equations.js}"></script>
+    <script src="../../static/js/formvalidating.js" th:src="@{/js/formvalidating.js}"></script>
+    <script src="../../static/js/matrix.js" th:src="@{/js/matrix.js}"></script>
+    <script src="../../static/js/chebyshev.js" th:src="@{/js/chebyshev.js}"></script>
+    <script src="../../static/js/page-specific/pseudospectral.js" th:src="@{/js/page-specific/pseudospectral.js}"/>
 </div>
 </body>
 </html>
