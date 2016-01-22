@@ -4,10 +4,12 @@
 
 sampledChebyshev = [];
 sampledChebyshevData = [];
-basesPlot = null;
 
-function createSubscript (n) {
-    var label  = '';
+function createSubscript(n) {
+    var label = '';
+    if (n === 0) {
+        return String.fromCharCode(0x2080);
+    }
     while (n >= 1) {
         var mod = n % 10;
         n /= 10;
@@ -17,8 +19,8 @@ function createSubscript (n) {
 }
 
 function sampleChebyshev() {
-    var minN = FormValidating.getInt('#minN');
-    var maxN = FormValidating.getInt('#maxN');
+    var minN = FormValidating.getWholeNumber('#minN');
+    var maxN = FormValidating.getWholeNumber('#maxN');
     var delta = FormValidating.getFloat('#delta');
     if (typeof(minN) !== 'undefined' && typeof(maxN) !== 'undefined' && typeof(delta) !== 'undefined') {
         sampledChebyshev = [];
@@ -37,24 +39,28 @@ function sampleChebyshev() {
                 label: "T" + createSubscript(n) + "(x)"
             });
         }
-        if (basesPlot == null) {
-            $.plot("#bases", sampledChebyshevData);
-        } else {
-            basesPlot.setData(sampledChebyshevData);
-        }
+
+        $.plot("#bases", sampledChebyshevData);
     }
 };
 
 (function () {
     sampleChebyshev();
     $(window).resize(function () {
-        if (basesPlot == null) {
-            $.plot("#bases", sampledChebyshevData);
-        } else {
-            basesPlot.setData(sampledChebyshevData);
-        }
+        $.plot("#bases", sampledChebyshevData);
     });
 })();
+
+function logistic(x) {
+    return 2 * (1 / (1 + Math.exp(-5 * x)) - 0.5);
+}
+
+function exp(x) {
+    var k = 2;
+    return 2 * (Math.exp(k * x) - 0.5 * (Math.exp(k) + Math.exp(-k))) /
+        (Math.exp(k) - Math.exp(-k));
+}
+var logisticSmooth = [];
 
 (function () {
     // Here we compute approximations using roots and extrema.
@@ -63,18 +69,7 @@ function sampleChebyshev() {
     var roots = Chebyshev.roots(10);
     var extrema = Chebyshev.extrema(11);
 
-    function logistic(x) {
-        return 2 * (1 / (1 + Math.exp(-5 * x)) - 0.5);
-    }
-
-    function exp(x) {
-        var k = 2;
-        return 2 * (Math.exp(k * x) - 0.5 * (Math.exp(k) + Math.exp(-k))) /
-            (Math.exp(k) - Math.exp(-k));
-    }
-
     var T = [];
-    var logisticSmooth = [];
     var expSmooth = [];
     var delta = 0.005;
     for (var x = -1; x < (1 + delta / 2.); x += delta) {
@@ -99,7 +94,7 @@ function sampleChebyshev() {
 
     var data = [
         {
-            label: "T" + String.fromCharCode(0x2081) + String.fromCharCode(0x2080) + "(x) with roots and extrema",
+            label: "T" + createSubscript(10) + "(x) with roots and extrema",
             data: T,
             color: 0
         },
@@ -140,4 +135,69 @@ function sampleChebyshev() {
     $(window).resize(function () {
         $.plot("#collocations", data);
     });
+})();
+
+var approximation = [];
+var solutionData = null;
+
+function initializeSolution() {
+    var rank = FormValidating.getWholeNumber('#rank');
+    var x = Chebyshev.extrema(rank);
+    approximation = [];
+    for (var i = 0; i < x.length; i++) {
+        approximation.push([x[i], x[i]]);
+    }
+
+    solutionData = [
+        {
+            data: logisticSmooth,
+            label: "logistic(x)"
+        },
+        {
+            data: approximation,
+            label: "approximation",
+            points: {show: true}
+        }
+    ];
+
+    $.plot("#solutions", solutionData);
+
+}
+
+function iterate() {
+    var f = [];
+    for (var i = 0; i < approximation.length; i++) {
+        f[i] = approximation[i][1];
+    }
+    var d = new Matrix(approximation.length);
+    d.copy(Chebyshev.extremaDiff(approximation.length));
+    var df = d.vectorMultiply(f);
+    var rhs = [];
+    for (var i = 0; i < f.length; i++) {
+        rhs.push(df[i] - 5*(1 - f[i]*f[i]));
+    }
+    d.addDiagonal(f, 10);
+
+    // boundary condition.
+    for (var i = 0 ; i < approximation.length; i++) {
+        d[0][i] = 0;
+    }
+    d[0][0] = 1;
+    rhs[0] = f[0] - logistic(approximation[0][0]);
+
+    d.solve(rhs);
+    for (var i = 0; i < approximation.length; i++) {
+        approximation[i][1] -= rhs[i];
+    }
+    $.plot("#solutions", solutionData);
+}
+
+(function () {
+
+    initializeSolution();
+
+    $(window).resize(function () {
+        $.plot("#solutions", solutionData);
+    });
+
 })();

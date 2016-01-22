@@ -63,7 +63,8 @@
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon" id="delta-addon">Resolution</span>
-                <input type="text" class="form-control" id="delta" name="delta" value="0.02" aria-describedby="delta-addon"/>
+                <input type="text" class="form-control" id="delta" name="delta" value="0.02"
+                       aria-describedby="delta-addon"/>
             </div>
         </div>
         <div class="form-group">
@@ -179,7 +180,33 @@
         the equation is non-linear, a direct solution is not possible. The Gâteaux derivative of this logistic equation
         can be computed
         <img class="numbered-equation" src="/images/math/dlogistic.svg"/>
+        Together with the above explanation, the following problem can be repeatedly solved to find the population
+        growth
+        under the logistic model
+        <img class="numbered-equation" src="/images/math/logisticproblem.svg"/>
     </p>
+
+    <p>
+        Since the solution is found using an iterative Newton's method, an initial guess gets subsequently improved at
+        each step. A choice of the number of points/maximum power of the polynomial to approximate the solution with
+        should be chosen. This choice is sometimes referred to as rank.
+    </p>
+
+    <div class="plot-container">
+        <div id="solutions" class="plot-placeholder"></div>
+    </div>
+    <form class="form-inline" href="#" id="solution">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon" id="rank-addon">Rank</span>
+                <input type="text" class="form-control" id="rank" name="rank" value="10" aria-describedby="rank-addon"/>
+                <div class="input-group-btn">
+                    <input class="btn btn-default" type="button" value="Initialize" onclick="initializeSolution()"/>
+                    <input class="btn btn-primary" type="button" value="Iterate" onclick="iterate()"/>
+                </div>
+            </div>
+        </div>
+    </form>
 
 </div>
 

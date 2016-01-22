@@ -1,6 +1,8 @@
 function Matrix(N) {
     this.pivots = [];
     this.luFactored = false;
+    this.rank = N;
+    this.length = N;
 
     for (var i = 0; i < N; i++) {
         this.pivots[i] = i;
@@ -27,7 +29,7 @@ Matrix.prototype.solve = function (b) {
     this.backSubstitute(b);
     // Now we need to pivot the result.
     var x = [];
-    for (var i = 0; i < this.length; i++) {
+    for (var i = 0; i < this.rank; i++) {
         x[i] = b[this.pivots[i]];
     }
     for (var i = 0; i < x.length; i++) {
@@ -39,12 +41,12 @@ Matrix.prototype.solve = function (b) {
  * LU factors the matrix.
  */
 Matrix.prototype.LUFactorize = function () {
-    for (var iRow = 0; iRow < this.length; iRow++) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
         this.pivot(iRow);
         var diagonal = this[this.pivots[iRow]][iRow];
-        for (var iSubRow = iRow + 1; iSubRow < this.length; iSubRow++) {
+        for (var iSubRow = iRow + 1; iSubRow < this.rank; iSubRow++) {
             this[this.pivots[iSubRow]][iRow] /= diagonal;
-            for (var iColumn = iRow + 1; iColumn < this.length; iColumn++) {
+            for (var iColumn = iRow + 1; iColumn < this.rank; iColumn++) {
                 this[this.pivots[iSubRow]][iColumn] -= this[this.pivots[iSubRow]][iRow] * this[this.pivots[iRow]][iColumn];
             }
         }
@@ -60,7 +62,7 @@ Matrix.prototype.LUFactorize = function () {
  * @param x The right hand side on entrance, the solution y on exit.
  */
 Matrix.prototype.forwardSubstitute = function (x) {
-    for (var iRow = 0; iRow < this.length; iRow++) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
         for (var iColumn = 0; iColumn < iRow; iColumn++) {
             x[this.pivots[iRow]] -= this[this.pivots[iRow]][iColumn] * x[this.pivots[iColumn]];
         }
@@ -77,8 +79,8 @@ Matrix.prototype.forwardSubstitute = function (x) {
  * @param x The right hand side on entrance, the solution y on exit.
  */
 Matrix.prototype.backSubstitute = function (x) {
-    for (var iRow = this.length - 1; iRow >= 0; iRow--) {
-        for (var iColumn = iRow + 1; iColumn < this.length; iColumn++) {
+    for (var iRow = this.rank - 1; iRow >= 0; iRow--) {
+        for (var iColumn = iRow + 1; iColumn < this.rank; iColumn++) {
             x[this.pivots[iRow]] -= this[this.pivots[iRow]][iColumn] * x[this.pivots[iColumn]];
         }
         x[this.pivots[iRow]] /= this[this.pivots[iRow]][iRow];
@@ -94,7 +96,7 @@ Matrix.prototype.backSubstitute = function (x) {
 Matrix.prototype.pivot = function (i) {
     var max = Math.abs(this[this.pivots[i]][i]);
     var indexOfMax = i;
-    for (var j = i + 1; j < this.length; j++) {
+    for (var j = i + 1; j < this.rank; j++) {
         var magnitude = Math.abs(this[this.pivots[j]][i]);
         if (magnitude > max) {
             max = magnitude;
@@ -129,12 +131,13 @@ Matrix.prototype.copy = function (a) {
  */
 Matrix.prototype.add = function (b, c) {
     if (typeof(c) === 'undefined') c = 1;
-    for (var iRow = 0; iRow < this.length; iRow++) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
         for (var iColumn = 0; iColumn < this[iRow].length; iColumn++) {
             this[iRow][iColumn] += c * b[iRow][iColumn];
         }
     }
 };
+
 /**
  * Adds a diagonal matrix d, to this. Optionally a constant c may be provided to multiply the matrix d by. At the end
  * this matrix will be equal to this + c*d. The input matrix d is unchanged.
@@ -144,16 +147,43 @@ Matrix.prototype.add = function (b, c) {
  */
 Matrix.prototype.addDiagonal = function (d, c) {
     if (typeof(c) === 'undefined') c = 1;
-    for (var iRow = 0; iRow < this.length; iRow++) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
         this[iRow][iRow] += c * d[iRow];
     }
 }
 
 /**
+ * Adds a constant to the main diagonal of this matrix.
+ *
+ * @param c The constant c to add to the diagonal.
+ */
+Matrix.prototype.addConstantToDiagonal = function (c) {
+    for (var iRow = 0; iRow < this.rank; iRow++) {
+        this[iRow][iRow] += c ;
+    }
+};
+
+/**
+ * Performs matrix vector multiplication: Ax = b, returns b.
+ * @param x The vector x to multiply by this.
+ */
+Matrix.prototype.vectorMultiply = function (x) {
+    var b = [];
+    for (var iRow = 0; iRow < this.rank; iRow++) {
+        var value = 0;
+        for (var iColumn = 0; iColumn < x.length; iColumn++) {
+            value += this[iRow][iColumn]*x[iColumn];
+        }
+        b.push(value);
+    }
+    return b;
+};
+
+/**
  * Prints this matrix to screen.
  */
 Matrix.prototype.print = function () {
-    for (var i = 0; i < this.length; i++) {
+    for (var i = 0; i < this.rank; i++) {
         console.log(this[i].toString());
     }
 };

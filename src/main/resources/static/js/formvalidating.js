@@ -3,17 +3,17 @@
  */
 
 FormValidating = {
-    INTEGER_REGEXP: /^\d*$/,
+    WHOLE_NUMBER_REGEXP: /^\d+$/,
     /**
-     * Gets an integer out of a form element, or doesn't return anything. If the value of the form is not an integer,
+     * Gets a non-negative integer out of a form element, or doesn't return anything. If the value of the form is not an integer,
      * the has-error class is added to it, otherwise has-error is removed.
      *
      * @param selector The DOM selector to pass to jquery and get the value of
      * @returns {Number} The integer in the form element or no return.
      */
-    getInt: function (selector) {
+    getWholeNumber: function (selector) {
         var value = $(selector).val();
-        if (this.INTEGER_REGEXP.test(value)) {
+        if (this.WHOLE_NUMBER_REGEXP.test(value) && value !== '') {
             $(selector).parent().removeClass('has-error');
             return parseInt(value);
         } else {
@@ -30,7 +30,7 @@ FormValidating = {
      */
     getFloat: function (selector) {
         var value = $(selector).val();
-        if (this.FLOAT_REGEXP.test(value)) {
+        if (this.FLOAT_REGEXP.test(value) && value !== '') {
             $(selector).parent().removeClass('has-error');
             return parseFloat(value);
         } else {
