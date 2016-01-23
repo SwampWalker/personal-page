@@ -84,5 +84,38 @@ Chebyshev = {
             jSign *= -1;
         }
         return d;
+    },
+
+    /**
+     * The matrix M that converts the vector of values u to coefficients a:
+     * Mu=a. See Boyd, Chebyshev and Fourier spectral methods, eq 5.37 pg 124.
+     * The coefficients are also implied by 4.49 and 4.50.
+     *
+     * @param N the rank of the matrix.
+     */
+    extremaValuesToCoefficients: function (N) {
+        var x = this.extrema(N);
+        var M = [[], []];
+        var invRankMinus1 = 1 / (N - 1);
+        // Initialize row 0 to T_0, and 1 to T_1
+        for (var iColumn = 0; iColumn < N; iColumn++) {
+            M[0][iColumn] = 2 * invRankMinus1;
+            M[1][iColumn] = x[iColumn] * 2 * invRankMinus1;
+        }
+        // Use recursion relation on further rows.
+        for (var iRow = 2; iRow < N; iRow++) {
+            M.push([]);
+            for (var iColumn = 0; iColumn < N; iColumn++) {
+                M[iRow][iColumn] = 2 * x[iColumn] * M[iRow - 1][iColumn] - M[iRow - 2][iColumn];
+            }
+        }
+        // Fix some weights.
+        for (var i = 0; i < N; i++) {
+            M[0][i] *= 0.5;
+            M[i][0] *= 0.5;
+            M[i][N - 1] *= 0.5;
+            M[N - 1][i] *= 0.5;
+        }
+        return M;
     }
 };

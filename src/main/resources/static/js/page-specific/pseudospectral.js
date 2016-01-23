@@ -139,18 +139,22 @@ var logisticSmooth = [];
 
 var approximation = [];
 var solutionData = null;
+var actualLogisticSmooth = [];
+function actualLogistic(x) {
+    return 1/(1 + Math.exp(-5*x));
+}
 
 function initializeSolution() {
     var rank = FormValidating.getWholeNumber('#rank');
     var x = Chebyshev.extrema(rank);
     approximation = [];
     for (var i = 0; i < x.length; i++) {
-        approximation.push([x[i], x[i]]);
+        approximation.push([x[i], 0.5*(1 + x[i])]);
     }
 
     solutionData = [
         {
-            data: logisticSmooth,
+            data: actualLogisticSmooth,
             label: "logistic(x)"
         },
         {
@@ -174,16 +178,17 @@ function iterate() {
     var df = d.vectorMultiply(f);
     var rhs = [];
     for (var i = 0; i < f.length; i++) {
-        rhs.push(df[i] - 5*(1 - f[i]*f[i]));
+        rhs.push(df[i] - 5*f[i]*(1 - f[i]));
     }
     d.addDiagonal(f, 10);
+    d.addConstantToDiagonal(-5);
 
     // boundary condition.
     for (var i = 0 ; i < approximation.length; i++) {
         d[0][i] = 0;
     }
     d[0][0] = 1;
-    rhs[0] = f[0] - logistic(approximation[0][0]);
+    rhs[0] = f[0] - actualLogistic(approximation[0][0]);
 
     d.solve(rhs);
     for (var i = 0; i < approximation.length; i++) {
@@ -193,6 +198,11 @@ function iterate() {
 }
 
 (function () {
+
+    var delta = 0.005;
+    for (var x = -1; x < (1 + delta / 2.); x += delta) {
+        actualLogisticSmooth.push([x, actualLogistic(x)]);
+    }
 
     initializeSolution();
 
