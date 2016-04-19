@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/math")
 public class Math {
+
     @RequestMapping("/{topic}")
     public String article(@PathVariable String topic, ModelMap model) {
         model.put("template", "math/" + topic);

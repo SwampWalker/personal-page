@@ -2,6 +2,10 @@
  * Created by atonita on 2016-01-02.
  */
 
+/*
+First bit of code samples basis functions and plots them.
+ */
+
 sampledChebyshev = [];
 sampledChebyshevData = [];
 
@@ -50,6 +54,10 @@ function sampleChebyshev() {
         $.plot("#bases", sampledChebyshevData);
     });
 })();
+
+/*
+Next block of code shows location of roots/extrema on a basis function and where some functions would be interpolated.
+ */
 
 function logistic(x) {
     return 2 * (1 / (1 + Math.exp(-5 * x)) - 0.5);
@@ -137,6 +145,10 @@ var logisticSmooth = [];
     });
 })();
 
+/*
+ This block of code computes solutions to the non-linear logistic equation.
+ */
+
 var approximation = [];
 var solutionData = null;
 var actualLogisticSmooth = [];
@@ -166,6 +178,7 @@ function initializeSolution() {
 
     $.plot("#solutions", solutionData);
 
+    initializeError();
 }
 
 function iterate() {
@@ -195,6 +208,7 @@ function iterate() {
         approximation[i][1] -= rhs[i];
     }
     $.plot("#solutions", solutionData);
+    computeErrors();
 }
 
 (function () {
@@ -211,3 +225,34 @@ function iterate() {
     });
 
 })();
+
+/*
+This block will compute the error during iteration of the above.
+ */
+var M = null;
+var errorData = null;
+
+function initializeError() {
+    var rank = FormValidating.getWholeNumber('#rank');
+    M = new Matrix(rank);
+    computeErrors();
+}
+
+function computeErrors() {
+    var error = [];
+    var errorDatum = [];
+    for (var i = 0; i < approximation.length; i++) {
+        error[i] = actualLogistic(approximation[i][0]) - approximation[i][1];
+        errorDatum.push([approximation[i][0], error[i]]);
+    }
+
+    errorData = [
+        {
+            data: errorDatum,
+            label: "Errors at collocations",
+            points: {show:true}
+        }
+    ];
+
+    $.plot("#errors", errorData);
+}
