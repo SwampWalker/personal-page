@@ -1,4 +1,4 @@
-package ca.tonita.ca.tonita.controllers;
+package ca.tonita.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

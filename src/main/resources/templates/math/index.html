@@ -1,0 +1,27 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mathematical articles</title>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Mathematical articles</h1>
+    <p>
+        Here I collect a number of articles that I write on topics of a mathematical nature. It is likely that more
+        complete treatises on the topics can be found elsewhere, but mostly this serves as a collection of notes for
+        myself.
+    </p>
+    <h2>Links</h2>
+    <dl th:each="link : ${links}">
+        <dt>
+            <a href="#" th:href="${link.address}" th:text="${link.title}">Article title</a>
+        </dt>
+        <dd th:text="${link.description}">A brief description of the article in question.</dd>
+    </dl>
+</div>
+
+</body>
+</html>
