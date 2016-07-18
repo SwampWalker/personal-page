@@ -9,7 +9,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Aaryn Tonita on 2016-01-02.
@@ -19,9 +21,14 @@ import java.util.List;
 @RequestMapping("/physics")
 public class Physics implements InitializingBean {
 
-    @Autowired
-    private TopicIndexer topicIndexer;
+    private final TopicIndexer topicIndexer;
     private List<LinkData> links;
+
+    @Inject
+    public Physics(TopicIndexer topicIndexer) {
+        Objects.requireNonNull(topicIndexer, "The TopicIndexer is required to index physics topics.");
+        this.topicIndexer = topicIndexer;
+    }
 
     @RequestMapping
     public String index(ModelMap model) {

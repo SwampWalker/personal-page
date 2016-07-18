@@ -5,6 +5,7 @@
     <title>Tolman-Oppenheimer-Volkoff (TOV) equations</title>
     <meta name="description"
           content="Relativistic equations for a self gravitating, spherically symmetric ball of fluid."/>
+    <link href="../../static/css/tonita.css" th:href="@{/css/tonita.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -12,11 +13,50 @@
 <div class="container" th:fragment="content">
     <h1>TOV equations</h1>
 
+    <p>
+        The Tolman-Oppenheimer-Volkoff equations are the relativistic equations for a static, spherically symmetric
+        star (fluid ball) in hydrostatic equilibrium. The Einstein equations and hydrodynamic equations are
+        simultaneously solved to find the solutions. The derivations of the equations often starts from an exponential
+        form of the metric and makes a Schwarzschild like mass substitution near the end. It is as illustrative to start
+        directly from the mass form of the metric
+        <img class="numbered-equation" src="../../static/images/tov/metric.svg" th:src="@{/images/tov/metric.svg}"/>
+    </p>
+
+    <p>
+        The stress energy tensor is derived from the above metric and the normal stress energy tensor for a perfect
+        fluid
+        <img class="numbered-equation" src="../../static/images/tov/stressEnergy.svg"
+             th:src="@{/images/tov/stressEnergy.svg}"/>
+        In a static spacetime, the four velocity of the fluid follows the integral curves of the time coordinate
+        <img class="numbered-equation" src="../../static/images/tov/fourVelocity.svg"
+             th:src="@{/images/tov/fourVelocity.svg}"/>
+        Therefore, the stress energy tensor is given in terms of the variables as
+        <img class="numbered-equation" src="../../static/images/tov/staticStressEnergy.svg"
+             th:src="@{/images/tov/staticStressEnergy.svg}"/>
+    </p>
+
+    <p>
+        Using the metric and stress energy tensor, the Einstein equations
+        <img src="../../static/images/tov/einstein.svg" th:src="@{/images/tov/einstein.svg}"/> can be computed. This
+        yields two equations
+        <img class="numbered-equation" src="../../static/images/tov/massEquation.svg"
+             th:src="@{/images/tov/massEquation.svg}"/>
+        and
+        <img class="numbered-equation" src="../../static/images/tov/phiEquation.svg"
+             th:src="@{/images/tov/phiEquation.svg}"/>
+        The mass equation is quite sensible: since the mass variable equals the Schwarzschild variable outside of the
+        star, the mass variable can be interpreted as the total energy inside of a given radius. Sensibly, to compute
+        the total energy the matter energy density must be integrated. I personally can make no intuitive sense of the
+        equation for the lapse variable.
+    </p>
 </div>
 
-<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 <div th:fragment="specific-js">
+    <script src="../../static/js/inheritance.js" th:src="@{/js/inheritance.js}"></script>
+    <script src="../../static/js/equations.js" th:src="@{/js/equations.js}"></script>
 </div>
 </body>
 </html>
