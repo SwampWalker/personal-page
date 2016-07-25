@@ -22,6 +22,8 @@
         <img class="numbered-equation" src="../../static/images/tov/metric.svg" th:src="@{/images/tov/metric.svg}"/>
     </p>
 
+    <h2>The Einstein equations</h2>
+
     <p>
         The stress energy tensor is derived from the above metric and the normal stress energy tensor for a perfect
         fluid
@@ -48,6 +50,35 @@
         star, the mass variable can be interpreted as the total energy inside of a given radius. Sensibly, to compute
         the total energy the matter energy density must be integrated. I personally can make no intuitive sense of the
         equation for the lapse variable.
+    </p>
+
+    <h2>Conservation of stress energy</h2>
+
+    <p>
+        The divergence of the stress energy can be readily computed from the mixed form of the stress energy tensor
+        <img class="numbered-equation" src="../../static/images/tov/divergenceStressEnergy.svg"
+             th:src="@{/images/tov/divergenceStressEnergy.svg}"/>
+        This equation can be expanded and the covariant derivatives of scalar fields replaced with partial derivatives
+        to yield
+        <img class="numbered-equation" src="../../static/images/tov/divT1.svg"
+             th:src="@{/images/tov/divT1.svg}"/>
+        Next the covariant derivatives can be expanded in place of their definitions in terms of the Christoffel
+        symbols
+        <img class="numbered-equation" src="../../static/images/tov/divT2.svg"
+             th:src="@{/images/tov/divT2.svg}"/>
+        For the TOV equations, the only non-vanishing part of the four-velocity is the <code>t</code> component, while
+        the only variable that the fields depend upon is <code>r</code>. This leaves the following equation
+        <img class="numbered-equation" src="../../static/images/tov/pressure1.svg"
+             th:src="@{/images/tov/pressure1.svg}"/>
+        Here the multiplication of the covariant and contravariant component of the four velocity yield <code>-1</code>
+        simplifying the expression to
+        <img class="numbered-equation" src="../../static/images/tov/pressure2.svg"
+             th:src="@{/images/tov/pressure2.svg}"/>
+        The only non-vanishing Christoffel symbol is the <code>{t,r,t}</code> component (equal to the radial derivative
+        of the lapse field phi), so the equation for hydrostatic
+        equilibrium is
+        <img class="numbered-equation" src="../../static/images/tov/hydrostatic.svg"
+             th:src="@{/images/tov/hydrostatic.svg}"/>
     </p>
 </div>
 
