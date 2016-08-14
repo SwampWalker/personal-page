@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="icon" href="../../favicon.ico"/>
     <title th:include="${template} :: title">Placeholder title</title>
-    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="/css/tonita.css" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/tonita.css"
+          th:href="@{/css/tonita.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -28,8 +30,12 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/">Home</a></li>
-                <li><a href="/math">Math</a></li>
-                <li><a href="/physics">Physics</a></li>
+                <li><a href="math/index.html" th:href="@{/math}">Math</a></li>
+                <li><a href="math/index.html" th:href="@{/physics}">Physics</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="login.html" th:href="@{/login}">Sign in</a></li>
             </ul>
         </div>
     </div>
@@ -37,8 +43,13 @@
 
 <div th:replace="${template} :: content"></div>
 
-<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
-<div th:include="${template} :: specific-js"/>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<div th:include="${template} :: specific-js" class="container">
+    <h1>${Template}</h1>
+    <p>The contents of the template would go here.</p>
+</div>
 </body>
 </html>

@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * All rights reserved.
  */
 @SpringBootApplication
-public class Application {
+public class TonitaCa {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(TonitaCa.class, args);
     }
 }
