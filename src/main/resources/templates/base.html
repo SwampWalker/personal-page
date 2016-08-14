@@ -31,11 +31,29 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="math/index.html" th:href="@{/math}">Math</a></li>
-                <li><a href="math/index.html" th:href="@{/physics}">Physics</a></li>
+                <li><a href="physics/index.html" th:href="@{/physics}">Physics</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="login.html" th:href="@{/login}">Sign in</a></li>
+                <li th:if="${#authentication instanceof T(org.springframework.security.authentication.AnonymousAuthenticationToken) }">
+                    <a href="login.html" th:href="@{/login}">Sign in</a>
+                </li>
+                <li th:unless="${#authentication instanceof T(org.springframework.security.authentication.AnonymousAuthenticationToken) }">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span th:text="${#authentication.name}">Username</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <form th:action="@{/logout}" method="post">
+                                    <input class="btn btn-default" type="submit" value="Sign Out"/>
+                                </form>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
