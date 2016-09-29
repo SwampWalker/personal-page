@@ -31,15 +31,13 @@ public class Physics implements InitializingBean {
 
     @RequestMapping
     public String index(ModelMap model) {
-        model.put("template", "physics/index");
         model.put("links", links);
-        return "base";
+        return "physics/index";
     }
 
     @RequestMapping("/{topic}")
     public String article(@PathVariable String topic, ModelMap model) {
-        model.put("template", "physics/" + topic);
-        return "base";
+        return "physics/" + topic;
     }
 
     @Override

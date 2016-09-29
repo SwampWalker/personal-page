@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Index {
     @RequestMapping("/")
     public String index(ModelMap model) {
-        model.put("template", "index");
-        return "base";
+        return "index";
     }
 }

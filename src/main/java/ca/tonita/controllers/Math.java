@@ -31,15 +31,13 @@ public class Math implements InitializingBean {
 
     @RequestMapping
     public String index(ModelMap model) {
-        model.put("template", "math/index");
         model.put("links", links);
-        return "base";
+        return "math/index";
     }
 
     @RequestMapping("/{topic}")
     public String article(@PathVariable String topic, ModelMap model) {
-        model.put("template", "math/" + topic);
-        return "base";
+        return "math/" + topic;
     }
 
     @Override
