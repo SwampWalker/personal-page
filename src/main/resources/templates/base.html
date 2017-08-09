@@ -1,6 +1,7 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="template" type="java.lang.String"*/-->
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -9,6 +10,10 @@
     <title th:include="${template} :: title">Placeholder title</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+          integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0"
+          crossorigin="anonymous"
+          th:href="@{/webjars/katex/0.7.1/dist/katex.min.css}">
     <link href="../static/css/tonita.css"
           th:href="@{/css/tonita.css}" rel="stylesheet"/>
 </head>
@@ -61,8 +66,8 @@
 
 <div th:replace="${template} :: content"></div>
 
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"
-        th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        th:src="@{/webjars/jquery/3.2.1/dist/jquery.min.js}"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
 <div th:include="${template} :: specific-js" class="container">

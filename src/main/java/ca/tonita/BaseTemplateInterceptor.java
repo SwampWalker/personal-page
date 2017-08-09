@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Created by Aaryn Tonita on 2016-09-29.
- * All rights reserved.
+ *
  */
 public class BaseTemplateInterceptor implements HandlerInterceptor {
     @Override
@@ -19,14 +19,16 @@ public class BaseTemplateInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-        Map<String, Object> model = modelAndView.getModel();
-        String viewName = modelAndView.getViewName();
-        model.put("template", viewName);
-        modelAndView.setViewName("base");
+        if (modelAndView != null) {
+            Map<String, Object> model = modelAndView.getModel();
+            String viewName = modelAndView.getViewName();
+            model.put("template", viewName);
+            modelAndView.setViewName("base");
+        }
     }
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-
+        // Nothing to do here, but needed by interface.
     }
 }

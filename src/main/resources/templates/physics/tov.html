@@ -1,11 +1,18 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Tolman-Oppenheimer-Volkoff (TOV) equations</title>
     <meta name="description"
           content="Relativistic equations for a self gravitating, spherically symmetric ball of fluid."/>
-    <link href="../../static/css/tonita.css" th:href="@{/css/tonita.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+          integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0"
+          crossorigin="anonymous"
+          th:href="@{/webjars/katex/0.7.1/dist/katex.min.css}">
+    <link href="../../static/css/tonita.css"
+          th:href="@{/css/tonita.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -19,7 +26,9 @@
         simultaneously solved to find the solutions. The derivations of the equations often starts from an exponential
         form of the metric and makes a Schwarzschild like mass substitution near the end. It is as illustrative to start
         directly from the mass form of the metric
-        <img class="numbered-equation" src="../../static/images/tov/metric.svg" th:src="@{/images/tov/metric.svg}"/>
+        <span class="numbered equation">
+            g_{\mu\nu} = -e^{2\Phi(r)}dt^2 + \frac{dr^2}{1-\frac{2m(r)}{r}} + r^2\left(d\theta^2 + \sin^2\theta d\phi^2\right)
+        </span>
     </p>
 
     <h2>The Einstein equations</h2>
@@ -27,25 +36,29 @@
     <p>
         The stress energy tensor is derived from the above metric and the normal stress energy tensor for a perfect
         fluid
-        <img class="numbered-equation" src="../../static/images/tov/stressEnergy.svg"
-             th:src="@{/images/tov/stressEnergy.svg}"/>
+        <span class="numbered equation">
+            T_{ab} = \rho u_au_b + P\left(u_au_b + g_{ab} \right)
+        </span>
         In a static spacetime, the four velocity of the fluid follows the integral curves of the time coordinate
-        <img class="numbered-equation" src="../../static/images/tov/fourVelocity.svg"
-             th:src="@{/images/tov/fourVelocity.svg}"/>
+        <span class="numbered equation">
+            u^a = e^{-\Phi(r)}\partial_t \equiv \left(e^{-\Phi(r)},0,0,0 \right)
+        </span>
         Therefore, the stress energy tensor is given in terms of the variables as
-        <img class="numbered-equation" src="../../static/images/tov/staticStressEnergy.svg"
-             th:src="@{/images/tov/staticStressEnergy.svg}"/>
+        <span class="numbered equation">
+            T_{\mu\nu} = \rho e^{2\Phi} dt^2 + \frac{Pdr^2}{1-\frac{2m}{r}} +Pr^2\left(d\theta^2 + \sin^2\theta d\phi^2 \right).
+        </span>
     </p>
 
     <p>
-        Using the metric and stress energy tensor, the Einstein equations
-        <img src="../../static/images/tov/einstein.svg" th:src="@{/images/tov/einstein.svg}"/> can be computed. This
-        yields two equations
-        <img class="numbered-equation" src="../../static/images/tov/massEquation.svg"
-             th:src="@{/images/tov/massEquation.svg}"/>
+        Using the metric and stress energy tensor, the Einstein equations <span
+            class="equation">G_{ab} = 8\pi T_{ab}</span> can be computed. This yields two equations
+        <span class="numbered equation">
+            \frac{dm}{dr}=4\pi r^2\rho
+        </span>
         and
-        <img class="numbered-equation" src="../../static/images/tov/phiEquation.svg"
-             th:src="@{/images/tov/phiEquation.svg}"/>
+        <span class="numbered equation">
+            \frac{d\Phi}{dr}=\frac{m + 4 \pi r^3 P}{r^2 - 2 r m}
+        </span>
         The mass equation is quite sensible: since the mass variable equals the Schwarzschild variable outside of the
         star, the mass variable can be interpreted as the total energy inside of a given radius. Sensibly, to compute
         the total energy the matter energy density must be integrated. I personally can make no intuitive sense of the
@@ -56,38 +69,54 @@
 
     <p>
         The divergence of the stress energy can be readily computed from the mixed form of the stress energy tensor
-        <img class="numbered-equation" src="../../static/images/tov/divergenceStressEnergy.svg"
-             th:src="@{/images/tov/divergenceStressEnergy.svg}"/>
+        <span class="numbered equation">
+            \nabla_b T_a{}^b = \nabla_b \left(\rho u_a u^b + P(u_a u^b + \delta_a{}^b)\right)
+        </span>
         This equation can be expanded and the covariant derivatives of scalar fields replaced with partial derivatives
         to yield
-        <img class="numbered-equation" src="../../static/images/tov/divT1.svg"
-             th:src="@{/images/tov/divT1.svg}"/>
+        <span class="numbered equation">
+            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + P) + (\rho + P)\nabla_b u_a u^b + \partial_a P
+        </span>
         Next the covariant derivatives can be expanded in place of their definitions in terms of the Christoffel
         symbols
-        <img class="numbered-equation" src="../../static/images/tov/divT2.svg"
-             th:src="@{/images/tov/divT2.svg}"/>
-        For the TOV equations, the only non-vanishing part of the four-velocity is the <code>t</code> component, while
-        the only variable that the fields depend upon is <code>r</code>. This leaves the following equation
-        <img class="numbered-equation" src="../../static/images/tov/pressure1.svg"
-             th:src="@{/images/tov/pressure1.svg}"/>
-        Here the multiplication of the covariant and contravariant component of the four velocity yield <code>-1</code>
-        simplifying the expression to
-        <img class="numbered-equation" src="../../static/images/tov/pressure2.svg"
-             th:src="@{/images/tov/pressure2.svg}"/>
-        The only non-vanishing Christoffel symbol is the <code>{t,r,t}</code> component (equal to the radial derivative
-        of the lapse field phi), so the equation for hydrostatic
-        equilibrium is
-        <img class="numbered-equation" src="../../static/images/tov/hydrostatic.svg"
-             th:src="@{/images/tov/hydrostatic.svg}"/>
+        <span class="numbered equation">
+            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + P) +
+            (\rho + P) \left(\partial_b u_a u^b - \Gamma^c{}_{ab} u_c u^b + \Gamma^b{}_{bc} u_a u^c\right) + \partial_a P
+        </span>
+        For the TOV equations, the only non-vanishing part of the four-velocity is the <span class="equation">t</span>
+        component, while the only variable that the fields depend upon is <span class="equation">r</span>. This leaves
+        the following equation
+        <span class="numbered equation">
+            \partial_r P - (\rho  + P) \Gamma^t{}_{rt} u_t u^t + (\rho  + P) \Gamma^\mu{}_{\mu t} u_t u^t = 0
+        </span>
+        Here the multiplication of the covariant and contravariant component of the four velocity yield <span
+            class="equation">-1</span> simplifying the expression to
+        <span class="numbered equation">
+            \partial_r P + (\rho  + P) \Gamma^t{}_{rt} - (\rho  + P) \Gamma^b{}_{bt} = 0
+        </span>
+        The only non-vanishing Christoffel symbol is the <span class="equation">{t,r,t}</span> component (equal to the
+        radial derivative of the lapse field phi), so the equation for hydrostatic equilibrium is
+        <span class="numbered equation">
+            \frac{dP}{dr} = -(\rho + P) \frac{d\Phi}{dr} = -(\rho + P) \frac{m + 4 \pi r^3 P}{r^2 - 2 r m}.
+        </span>
     </p>
 </div>
 
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"
+        th:src="@{/webjars/jquery/3.2.1/dist/jquery.min.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"
         th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 <div th:fragment="specific-js">
-    <script src="../../static/js/inheritance.js" th:src="@{/js/inheritance.js}"></script>
-    <script src="../../static/js/equations.js" th:src="@{/js/equations.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+            integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+            crossorigin="anonymous"
+            th:src="@{/webjars/katex/0.7.1/dist/katex.min.js}"></script>
+    <script src="../../static/js/equations.js"
+            th:src="@{/js/equations.js}"></script>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Created by Aaryn Tonita on 2016-01-02.
- * All rights reserved.
+ *
  */
 @SpringBootApplication
 public class TonitaCa {

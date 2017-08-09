@@ -2,7 +2,6 @@ package ca.tonita;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,11 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.logout.*;
 import org.springframework.security.web.csrf.CsrfFilter;
 
-import java.util.Objects;
-
 /**
  * Created by Aaryn Tonita on 2016-08-14.
- * All rights reserved.
+ *
  */
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -38,8 +35,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public LogoutFilter getLogoutFilter() {
         LogoutSuccessHandler successHandler = getLogoutSuccessHandler();
         LogoutHandler[] handlers = getLogoutHandlers();
-        LogoutFilter filter = new LogoutFilter(successHandler, handlers);
-        return filter;
+        return new LogoutFilter(successHandler, handlers);
     }
 
     public LogoutHandler[] getLogoutHandlers() {

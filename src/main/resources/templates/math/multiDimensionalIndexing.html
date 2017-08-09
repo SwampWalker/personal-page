@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Multidimensional indexing and differential matrix structure</title>
+    <meta name="description"
+          content="An outline of a particular strategy for multidimensional indexing of
+           discrete fields and the structure of the resulting differential matrices."/>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Indexing of discrete multidimensional fields</h1>
+
+    <p>
+        In discretizing a field in order to find an approximation to the solution of a partial differential equation,
+        one must devise a strategy for the book keeping of the values of the field at the collocation points (or
+        coefficients or equivalent values). This page outlines how the discrete values of a field may be collected into
+        a vector and provides a correspondence between the n-dimensional coordinate space and the single vector
+        dimension.
+    </p>
+
+    <p>
+        For notation in this section, when up to three dimensions are used the coordinates will be denoted as
+        <span class="equation">x</span>, <span class="equation">y</span> and <span class="equation">z</span> and when
+        discretised, each will have points <span class="equation">\{x_0, x_1, ..., x_{N_x-1}\}</span>,
+        <span class="equation">\{x_y, x_y, ..., y_{N_y-1}\}</span> and
+        <span class="equation">\{z_0, z_1, ..., z_{N_z-1}\}</span>.
+    </p>
+
+    <h2>Single dimensional indexing</h2>
+
+    <p>
+        A single dimension maps onto a vector somewhat canonically. The only decision to be made being whether the first
+        indices belong to the smallest values of the coordinates or the largest values of the coordinates. This
+        discussion assumes that the smallest index maps onto the smallest coordinate value and the index maps onto the
+        coordinates in a monotonic fashion. If the vector of values of the field <span class="equation">f</span> is
+        denoted by <span class="equation">\mathbf{V}</span> and the coordinate values denoted by the set
+        <span class="equation">\{x_i\}</span> with <span class="equation">x_i < x_j</span> for
+        <span class="equation">i < j</span> then this choice of mapping gives the vector structure
+        <span class="numbered equation">
+            \mathbf{V} = \left[
+                \begin{array}{c}
+                    V_0 \\
+                    V_1 \\
+                    V_2 \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f(x_0) \\
+                    f(x_1) \\
+                    f(x_2) \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    f_2 \\
+                    \vdots
+                \end{array}
+            \right].
+        </span>
+        This also defines a couple of synonymous definitions of the field and its components.
+    </p>
+
+    <p>
+        The derivative of the field at the discreted coordinate locations can be indexed in the exact same way. Since
+        the derivative is a linear operator, it will always have a representation as a matrix operator. In general, for
+        a one dimensional field, the derivative can therefore be denoted variously as
+        <span class="numbered equation">
+            \frac{d \mathbf{V}}{dx} = \left[
+                \begin{array}{c}
+                    \frac{df}{dx}(x_0) \\
+                    \frac{df}{dx}(x_1) \\
+                    \frac{df}{dx}(x_2) \\
+                    \vdots
+                \end{array}
+            \right] = \mathbf{DV} = \left[
+                \begin{array}{cccc}
+                    d_{00} & d_{01} & d_{02} & ... \\
+                    d_{10} & d_{11} & d_{12} & ... \\
+                    d_{20} & d_{21} & d_{22} & ... \\
+                    \vdots & \vdots & \vdots & \ddots
+                \end{array}
+            \right]
+            \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    f_2 \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    \sum_{i=0}^N d_{0i}f_i \\
+                    \sum_{i=0}^N d_{1i}f_i \\
+                    \sum_{i=0}^N d_{2i}f_i \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    \sum_{i=0}^N d_{0i} f(x_i) \\
+                    \sum_{i=0}^N d_{1i} f(x_i) \\
+                    \sum_{i=0}^N d_{2i} f(x_i) \\
+                    \vdots
+                \end{array}
+            \right].
+        </span>
+        The first and last vector provide a quick shorthand for the derivative
+        <span class="numbered equation">
+            \frac{df}{dx}(x_j) = \sum_{i=0}^N d_{ji} f(x_i).
+        </span>
+    </p>
+
+    <h2>Multiple dimensional fields</h2>
+
+    <p>
+        With multiple dimensions, the indexing is not as straightforward. The typical methodology is to have the first
+        dimension be the fastest changing coordinate, the second dimension the next fastest changing coordinate and so
+        on. The coordinates increase until they reach their greatest value, then on the next increment of that
+        coordinate they start at the lowest value and the next coordinate is incremented.
+    </p>
+
+    <p>
+        This methodology, again with <span class="equation">x_i < x_j</span> and <span class="equation">y_i < y_j</span>
+        and so on for <span class="equation">i < j</span> yields the following vector
+        <span class="numbered equation">
+            \mathbf{V} = \left[
+                \begin{array}{c}
+                    V_0 \\
+                    V_1 \\
+                    \vdots \\
+                    V_{N_x - 1} \\
+                    V_{N_x} \\
+                    V_{N_x + 1} \\
+                    \vdots \\
+                    V_{2 n_x - 1} \\
+                    V_{2 N_x} \\
+                    V_{2 N_x + 1} \\
+                    \vdots \\
+                    V_{N_y N_x - 1} \\
+                    V_{N_y N_x} \\
+                    V_{N_y N_x + 1} \\
+                    \vdots \\
+                    V_{N_z N_y N_x - 1}
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    \vdots \\
+                    f_{N_x - 1} \\
+                    f_{N_x} \\
+                    f_{N_x + 1} \\
+                    \vdots \\
+                    f_{2 n_x - 1} \\
+                    f_{2 N_x} \\
+                    f_{2 N_x + 1} \\
+                    \vdots \\
+                    f_{N_y N_x - 1} \\
+                    f_{N_y N_x} \\
+                    f_{N_y N_x + 1} \\
+                    \vdots \\
+                    f_{N_z N_y N_x - 1}
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f(x_0, y_0, z_0) \\
+                    f(x_1, y_0, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_0, z_0) \\
+                    f(x_0, y_1, z_0) \\
+                    f(x_1, y_1, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_1, z_0) \\
+                    f(x_0, y_2, z_0) \\
+                    f(x_1, y_2, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_{N_y}, z_0) \\
+                    f(x_0, y_0, z_1) \\
+                    f(x_1, y_0, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_{N_y}, z_{N_z}
+                \end{array}
+            \right].
+        </span>
+        This defines a number of indexing relations
+        <span class="numbered equation">
+            i_{\mathrm{3D}} = i_x + N_x(i_y + N_y i_z),
+        </span>
+        <span class="numbered equation">
+            i_x = i_{\mathrm{3D}}\ \mathrm{mod}\ N_x,
+        </span>
+        <span class="numbered equation">
+            i_y = \left\lfloor \frac{i_{\mathrm{3D}}}{N_x} \right\rfloor\ \mathrm{mod}\ N_y,
+        </span>
+        <span class="numbered equation">
+            i_z = \left\lfloor \frac{i_{\mathrm{3D}}}{N_x N_y} \right\rfloor.
+        </span>
+        Generalized, the formulae for a general <span class="equation">n</span> dimensions
+        <span class="numbered equation">
+            i_{\mathrm{ND}} = \sum_{d = 1}^{n}
+        </span>
+    </p>
+</div>
+
+<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<div th:fragment="specific-js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+            integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+            crossorigin="anonymous"
+            th:src="@{/webjars/katex/0.7.1/dist/katex.min.js}"></script>
+    <script src="../../static/js/equations.js"
+            th:src="@{/js/equations.js}"></script>
+</div>
+</body>
+</html>

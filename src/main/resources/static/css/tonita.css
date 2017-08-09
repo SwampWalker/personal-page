@@ -3,14 +3,14 @@ body {
     padding-bottom: 50px;
 }
 
-span.equation-numbering {
-    float: right;
+.equation.numbered {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-img.numbered-equation {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 30px;
+.equation.numbered span:nth-child(1) {
+    flex-grow: 1;
 }
 
 .plot-container {
