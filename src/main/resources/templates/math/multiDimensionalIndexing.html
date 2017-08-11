@@ -26,7 +26,8 @@
         <span class="equation">x</span>, <span class="equation">y</span> and <span class="equation">z</span> and when
         discretised, each will have points <span class="equation">\{x_0, x_1, ..., x_{N_x-1}\}</span>,
         <span class="equation">\{x_y, x_y, ..., y_{N_y-1}\}</span> and
-        <span class="equation">\{z_0, z_1, ..., z_{N_z-1}\}</span>.
+        <span class="equation">\{z_0, z_1, ..., z_{N_z-1}\}</span>. The total number of points is deneoted as
+        <span class="equation">N = N_x N_y N_z</span>
     </p>
 
     <h2>Single dimensional indexing</h2>
@@ -189,7 +190,7 @@
         </span>
         This defines a number of indexing relations
         <span class="numbered equation">
-            i_{\mathrm{3D}} = i_x + N_x(i_y + N_y i_z),
+            i_{\mathrm{3D}} = i_x + N_x(i_y + N_y i_z) = i_x + i_y N_x + i_z N_x N_y,
         </span>
         <span class="numbered equation">
             i_x = i_{\mathrm{3D}}\ \mathrm{mod}\ N_x,
@@ -202,7 +203,56 @@
         </span>
         Generalized, the formulae for a general <span class="equation">n</span> dimensions
         <span class="numbered equation">
-            i_{\mathrm{ND}} = \sum_{d = 1}^{n}
+            i_{\mathrm{ND}} = \sum_{d = 1}^{n}{ i_d \left(\prod_{d'=1}^{d-1}{ N_{d'}}\right)}
+        </span>
+        and therefore
+        <span class="numbered equation">
+            i_d = \left\lfloor \frac{i_{\mathrm{ND}}}{\prod_{d'=1}^{d-1} N_{d'}} \right\rfloor\ \mathrm{mod}\ N_d
+        </span>
+    </p>
+
+    <p>
+        These indexing relations can then be used to build derivatives
+        <span class="numbered equation" id="dfdx">
+            \frac{df}{dx}(x_i, y_j, z_k) = \sum_{i'=0}^{N_x-1} d_{ii'} f(x_{i'}, y_j, z_k) = \mathbf{D}_x \mathbf{V},
+        </span>
+        <span class="numbered equation">
+            \frac{df}{dy}(x_i, y_j, z_k) = \sum_{j'=0}^{N_y-1} d_{jj'} f(x_i, y_{j'}, z_k) = \mathbf{D}_y \mathbf{V},
+        </span>
+        <span class="numbered equation">
+            \frac{df}{dz}(x_i, y_j, z_k) = \sum_{k'=0}^{N_z-1} d_{kk'} f(x_i, y_j, z_{k'}) = \mathbf{D}_z \mathbf{V}.
+        </span>
+        A general element of the vector containing the derivative with respect to <span class="equation">x</span> has
+        the relation
+        <span class="numbered equation">
+            \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}}} = \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}(i,j,k)}}
+                = \sum_{i'_{3D}=0}^{N} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i'_\mathrm{3D}} f_{i'_\mathrm{3D}}
+                = \sum_{i'_{3D}=0}^{N} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i'_{\mathrm{3D}(i',j',k')}} f_{i'_\mathrm{3D}(i',j',k')}.
+        </span>
+        The sum on <span class="equation">i'_\mathrm{3D}(i',j',k')</span> can be replaced with a triple sum as
+        <span class="numbered equation">
+            \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}(i,j,k)}}
+                = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
+        </span>
+        Comparing this equation with <a class="eqref" href="#dfdx">the equation above</a> yields
+        <span class="numbered equation">
+            \sum_{i'=0}^{N_x} d_{ii'} f_{i_\mathrm{3D}(i',j,k)} = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
+        </span>
+        Since the coefficients of <span class="equation">f_{i_\mathrm{3D}(i',j',k')}</span> must vanish when
+        <span class="equation">j \ne j'</span> and <span class="equation">k \ne k'</span> we can use the Kronecker
+        delta to write
+        <span class="numbered equation">
+            \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}\delta_{jj'}\delta_{kk'}.
+        </span>
+        By similar arguments
+        <span class="numbered equation">
+            \left( \mathbf{D}_y \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_z \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}\delta_{jj'}d_{kk'}.
         </span>
     </p>
 </div>

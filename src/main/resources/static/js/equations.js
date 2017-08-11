@@ -10,4 +10,5 @@
             }
         }
     );
+    // TODO: allow through js or css the equations to wrap on = signs.
 })();
