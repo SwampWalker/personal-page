@@ -112,8 +112,29 @@
         </span>
         The first and last vector provide a quick shorthand for the derivative
         <span class="numbered equation">
-            \frac{df}{dx}(x_j) = \sum_{i=0}^N d_{ji} f(x_i).
+            \frac{df}{dx}(x_i) = \sum_{j=0}^N d_{ij} f(x_j).
         </span>
+        Since the vector containing the derivative of the function is another function in vector form, the second
+        derivative can be computed by applying the derivative operator again
+        <span class="numbered equation"  id="d2dx2">
+            \frac{d^2f}{dx^2}(x_i) = \sum_{j=0}^N \sum_{k=0}^N d_{ij}d_{jk} f(x_k).
+        </span>
+        The sum with respect to <span class="equation">j</span> just implies matrix multiplication, which is sensible:
+        the second derivative is another linear operator and should have a direct representation as a single matrix
+        <span class="numbered equation">
+            d^2{}_{ij} = \sum_{k=0}^N d_{ik}d_{kj}.
+        </span>
+        With that <a class="eqref" href="#d2dx2">the second derivative equation above</a> can be written
+        <span class="numbered equation">
+            \frac{d^2f}{dx^2}(x_i) = \sum_{j=0}^N d^2{}_{ij} f(x_j).
+        </span>
+    </p>
+
+    <p>
+        In some cases, such as Chebyshev pseudospectral methods, the discretization may have an expression for the
+        second derivative. In general, it will not be the same expression as this matrix. It may be preferable to use
+        the direct expression for the second derivative due to a more compact stencil (finite differences) or it may be
+        preferable to use the matrix product expression for numerical stability or just simplicity.
     </p>
 
     <h2>Multiple dimensional fields</h2>
@@ -245,7 +266,7 @@
             \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
                 = d_{ii'}\delta_{jj'}\delta_{kk'}.
         </span>
-        By similar arguments
+        By similar arguments the other derivatives can be shown to be
         <span class="numbered equation">
             \left( \mathbf{D}_y \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
                 = \delta_{ii'}d_{jj'}\delta_{kk'},
@@ -253,6 +274,31 @@
         <span class="numbered equation">
             \left( \mathbf{D}_z \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
                 = \delta_{ii'}\delta_{jj'}d_{kk'}.
+        </span>
+        and the second derivatives can shown to be
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xx} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d^2{}_{ii'}\delta_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xy} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}d_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}\delta_{jj'}d_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{yy} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d^2{}_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{yz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d_{jj'}d_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{zz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}\delta_{jj'}d^2{}_{kk'}.
         </span>
     </p>
 </div>
