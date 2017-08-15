@@ -64,3 +64,13 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+/*
+    Hovering popup for equation references.
+*/
+#__equation-popup {
+    background-color: white;
+    border: medium solid black;
+    border-radius: 15px;
+    padding: 10px;
+}
