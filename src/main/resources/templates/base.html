@@ -45,7 +45,7 @@
                 </li>
                 <li th:unless="${#authentication instanceof T(org.springframework.security.authentication.AnonymousAuthenticationToken) }">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <span th:text="${#authentication.name}">Username</span>
+                        <span th:text="${#authentication}">Username</span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -70,9 +70,8 @@
         th:src="@{/webjars/jquery/3.2.1/dist/jquery.min.js}"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
-<div th:include="${template} :: specific-js" class="container">
-    <h1>${Template}</h1>
-    <p>The contents of the template would go here.</p>
+<div th:include="~{${template} :: specific-js} ?: _">
+    <!-- Custom javascript would appear here. -->
 </div>
 </body>
 </html>
