@@ -1,6 +1,6 @@
 (function () {
     var nextNumber = 1;
-    $('span.equation').each(function () {
+    $('.equation').each(function () {
             var text = $(this).text();
             var numbered = $(this).hasClass('numbered');
             katex.render(text, this, {displayMode: numbered});

@@ -255,7 +255,8 @@
             \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}(i,j,k)}}
                 = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
         </span>
-        Comparing this equation with <a class="eqref" href="#dfdx">the equation above</a> yields
+        Using <a class="eqref" href="#dfdx">the equation above</a> to make a substitution on the left hand side of this
+        equation yields
         <span class="numbered equation">
             \sum_{i'=0}^{N_x} d_{ii'} f_{i_\mathrm{3D}(i',j,k)} = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
         </span>
@@ -296,15 +297,94 @@
             \left( \mathbf{D}_{yz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
                 = \delta_{ii'}d_{jj'}d_{kk'},
         </span>
-        <span class="numbered equation">
+        <eqn class="numbered equation">
             \left( \mathbf{D}_{zz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
-                = \delta_{ii'}\delta_{jj'}d^2{}_{kk'}.
-        </span>
+            = \delta_{ii'}\delta_{jj'}d^2{}_{kk'}.
+        </eqn>
     </p>
 
     <p>
         Expressions for generic dimensionality can also be provided. The derivative with respect to the <span
-            class="equation">d</span>'th coordinate
+            class="equation">j</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d_{i_j i'_j}\prod_{k \ne j} \delta_{i_k i'_k},
+        </span>
+        the second derivative with respect to the <span class="equation">j</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j x_j} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d^2_{i_j i'_j}\prod_{k \ne j} \delta_{i_k i'_k}
+        </span>
+        and the mixed derivative with respect to the <span class="equation">j</span>'th coordinate and the <span
+            class="equation">k</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j x_k} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d_{i_j i'_j}d_{i_k i'_k}\prod_{l \ne j, k} \delta_{i_l i'_l}.
+        </span>
+    </p>
+
+    <h2>Computational concerns</h2>
+
+    <p>
+        With the presence of the Kronecker delta terms in the multidimensional derivative matrices imply that those
+        matrices are in fact sparse. Because of this, it is computationally inefficient to compute them by looping over
+        each individual dimension's index. Instead, a single loop over the rows of the matrix can be performed and the
+        individual dimensional indices computed from the row index. Then an inner loop can be made over the dimensional
+        index of the coordinate being differentiated with respect to (or two loops over the indices of the indices of
+        the coordinates for mixed derivatives). The values of the primed indices are then equal to the unprimed indices
+        or the inner loop indices. These primed indices can be used to compute the primed column index. Then the
+        component of the matrix at that corresponding row and column index can be set to the value of the single
+        dimensional derivative matrix, second derivative matrix or product of matrix components for second derivatives.
+    </p>
+
+    <p>
+        Since the description of the computational procedure is somewhat vague, here is some javascript pseudocode.
+    </p>
+
+    <pre>
+        const N = [N_0, N_1, N_2, ..., N_n];  // N_i is the number of points in the i'th dimension
+        const d = [d_0, d_1, d_2, ..., d_n]; // d_i is the differential matrix for the i'th dimension.
+
+        function indices(i_nd, N) {
+            const indices = [];
+            var prod = 1;
+            for (var i = 0; i < N.length; i++) {
+                indices.push(Math.floor(i_nd / prod) % N[i]);
+                prod *= N[i];
+            }
+            return indices;
+        }
+
+        function i_nd(indices, N) {
+            var i_nd = 0;
+            var prod = 1;
+            for (var i = 0; i < N.length; i++) {
+                i_nd += indices[i] * prod;
+                prod *= N[i];
+            }
+            return i_nd;
+        }
+
+        function derivative(j, d, N) {
+            const N_nd = N.reduce((product, n) => product * n, 1);
+            const D = Array.from(new Array(N_nd), () => Array.from(new Array(N_nd), () => 0));
+            for (var iRow = 0; iRow < N_nd; iRow++) {
+                const i = indices(iRow, N);
+                const iPrime = i.slice()
+                for (var i_j = 0; i_j < N[j]; i_j++) {
+                    iPrime[j] = i_j;
+                    const iColumn = i_nd(iPrime, N);
+                    D[iRow][iColumn] = d[j][i[j]][iPrime[j]];
+                }
+            }
+            return D;
+        }
+    </pre>
+
+    <p>
+        In general, even computing the matrix <code>D</code> may be unnecessary. Generally, for solving partial
+        differential equations, the matrix will be a factor of a sub component and that block should be added to instead
+        of computing a separate matrix and adding it to the block.
     </p>
 </div>
 
