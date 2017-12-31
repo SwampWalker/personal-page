@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Multidimensional indexing and differential matrix structure</title>
+    <meta name="description"
+          content="An outline of a particular strategy for multidimensional indexing of
+           discrete fields and the structure of the resulting differential matrices."/>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Indexing of discrete multidimensional fields</h1>
+
+    <p>
+        In discretizing a field in order to find an approximation to the solution of a partial differential equation,
+        one must devise a strategy for the book keeping of the values of the field at the collocation points (or
+        coefficients or equivalent values). This page outlines how the discrete values of a field may be collected into
+        a vector and provides a correspondence between the n-dimensional coordinate space and the single vector
+        dimension.
+    </p>
+
+    <p>
+        For notation in this section, when up to three dimensions are used the coordinates will be denoted as
+        <span class="equation">x</span>, <span class="equation">y</span> and <span class="equation">z</span> and when
+        discretised, each will have points <span class="equation">\{x_0, x_1, ..., x_{N_x-1}\}</span>,
+        <span class="equation">\{x_y, x_y, ..., y_{N_y-1}\}</span> and
+        <span class="equation">\{z_0, z_1, ..., z_{N_z-1}\}</span>. The total number of points is deneoted as
+        <span class="equation">N = N_x N_y N_z</span>
+    </p>
+
+    <h2>Single dimensional indexing</h2>
+
+    <p>
+        A single dimension maps onto a vector somewhat canonically. The only decision to be made being whether the first
+        indices belong to the smallest values of the coordinates or the largest values of the coordinates. This
+        discussion assumes that the smallest index maps onto the smallest coordinate value and the index maps onto the
+        coordinates in a monotonic fashion. If the vector of values of the field <span class="equation">f</span> is
+        denoted by <span class="equation">\mathbf{V}</span> and the coordinate values denoted by the set
+        <span class="equation">\{x_i\}</span> with <span class="equation">x_i < x_j</span> for
+        <span class="equation">i < j</span> then this choice of mapping gives the vector structure
+        <span class="numbered equation">
+            \mathbf{V} = \left[
+                \begin{array}{c}
+                    V_0 \\
+                    V_1 \\
+                    V_2 \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f(x_0) \\
+                    f(x_1) \\
+                    f(x_2) \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    f_2 \\
+                    \vdots
+                \end{array}
+            \right].
+        </span>
+        This also defines a couple of synonymous definitions of the field and its components.
+    </p>
+
+    <p>
+        The derivative of the field at the discreted coordinate locations can be indexed in the exact same way. Since
+        the derivative is a linear operator, it will always have a representation as a matrix operator. In general, for
+        a one dimensional field, the derivative can therefore be denoted variously as
+        <span class="numbered equation">
+            \frac{d \mathbf{V}}{dx} = \left[
+                \begin{array}{c}
+                    \frac{df}{dx}(x_0) \\
+                    \frac{df}{dx}(x_1) \\
+                    \frac{df}{dx}(x_2) \\
+                    \vdots
+                \end{array}
+            \right] = \mathbf{DV} = \left[
+                \begin{array}{cccc}
+                    d_{00} & d_{01} & d_{02} & ... \\
+                    d_{10} & d_{11} & d_{12} & ... \\
+                    d_{20} & d_{21} & d_{22} & ... \\
+                    \vdots & \vdots & \vdots & \ddots
+                \end{array}
+            \right]
+            \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    f_2 \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    \sum_{i=0}^N d_{0i}f_i \\
+                    \sum_{i=0}^N d_{1i}f_i \\
+                    \sum_{i=0}^N d_{2i}f_i \\
+                    \vdots
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    \sum_{i=0}^N d_{0i} f(x_i) \\
+                    \sum_{i=0}^N d_{1i} f(x_i) \\
+                    \sum_{i=0}^N d_{2i} f(x_i) \\
+                    \vdots
+                \end{array}
+            \right].
+        </span>
+        The first and last vector provide a quick shorthand for the derivative
+        <span class="numbered equation">
+            \frac{df}{dx}(x_i) = \sum_{j=0}^N d_{ij} f(x_j).
+        </span>
+        Since the vector containing the derivative of the function is another function in vector form, the second
+        derivative can be computed by applying the derivative operator again
+        <span class="numbered equation" id="d2dx2">
+            \frac{d^2f}{dx^2}(x_i) = \sum_{j=0}^N \sum_{k=0}^N d_{ij}d_{jk} f(x_k).
+        </span>
+        The sum with respect to <span class="equation">j</span> just implies matrix multiplication, which is sensible:
+        the second derivative is another linear operator and should have a direct representation as a single matrix
+        <span class="numbered equation">
+            d^2{}_{ij} = \sum_{k=0}^N d_{ik}d_{kj}.
+        </span>
+        With that <a class="eqref" href="#d2dx2">the second derivative equation above</a> can be written
+        <span class="numbered equation">
+            \frac{d^2f}{dx^2}(x_i) = \sum_{j=0}^N d^2{}_{ij} f(x_j).
+        </span>
+    </p>
+
+    <p>
+        In some cases, such as Chebyshev pseudospectral methods, the discretization may have an expression for the
+        second derivative. In general, it will not be the same expression as this matrix. It may be preferable to use
+        the direct expression for the second derivative due to a more compact stencil (finite differences) or it may be
+        preferable to use the matrix product expression for numerical stability or just simplicity.
+    </p>
+
+    <h2>Multiple dimensional fields</h2>
+
+    <p>
+        With multiple dimensions, the indexing is not as straightforward. The typical methodology is to have the first
+        dimension be the fastest changing coordinate, the second dimension the next fastest changing coordinate and so
+        on. The coordinates increase until they reach their greatest value, then on the next increment of that
+        coordinate they start at the lowest value and the next coordinate is incremented.
+    </p>
+
+    <p>
+        This methodology, again with <span class="equation">x_i < x_j</span> and <span class="equation">y_i < y_j</span>
+        and so on for <span class="equation">i < j</span> yields the following vector
+        <span class="numbered equation">
+            \mathbf{V} = \left[
+                \begin{array}{c}
+                    V_0 \\
+                    V_1 \\
+                    \vdots \\
+                    V_{N_x - 1} \\
+                    V_{N_x} \\
+                    V_{N_x + 1} \\
+                    \vdots \\
+                    V_{2 n_x - 1} \\
+                    V_{2 N_x} \\
+                    V_{2 N_x + 1} \\
+                    \vdots \\
+                    V_{N_y N_x - 1} \\
+                    V_{N_y N_x} \\
+                    V_{N_y N_x + 1} \\
+                    \vdots \\
+                    V_{N_z N_y N_x - 1}
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f_0 \\
+                    f_1 \\
+                    \vdots \\
+                    f_{N_x - 1} \\
+                    f_{N_x} \\
+                    f_{N_x + 1} \\
+                    \vdots \\
+                    f_{2 n_x - 1} \\
+                    f_{2 N_x} \\
+                    f_{2 N_x + 1} \\
+                    \vdots \\
+                    f_{N_y N_x - 1} \\
+                    f_{N_y N_x} \\
+                    f_{N_y N_x + 1} \\
+                    \vdots \\
+                    f_{N_z N_y N_x - 1}
+                \end{array}
+            \right] = \left[
+                \begin{array}{c}
+                    f(x_0, y_0, z_0) \\
+                    f(x_1, y_0, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_0, z_0) \\
+                    f(x_0, y_1, z_0) \\
+                    f(x_1, y_1, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_1, z_0) \\
+                    f(x_0, y_2, z_0) \\
+                    f(x_1, y_2, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_{N_y}, z_0) \\
+                    f(x_0, y_0, z_1) \\
+                    f(x_1, y_0, z_0) \\
+                    \vdots \\
+                    f(x_{N_x}, y_{N_y}, z_{N_z}
+                \end{array}
+            \right].
+        </span>
+        This defines a number of indexing relations
+        <span class="numbered equation">
+            i_{\mathrm{3D}} = i_x + N_x(i_y + N_y i_z) = i_x + i_y N_x + i_z N_x N_y,
+        </span>
+        <span class="numbered equation">
+            i_x = i_{\mathrm{3D}}\ \mathrm{mod}\ N_x,
+        </span>
+        <span class="numbered equation">
+            i_y = \left\lfloor \frac{i_{\mathrm{3D}}}{N_x} \right\rfloor\ \mathrm{mod}\ N_y,
+        </span>
+        <span class="numbered equation">
+            i_z = \left\lfloor \frac{i_{\mathrm{3D}}}{N_x N_y} \right\rfloor.
+        </span>
+        Generalized, the formulae for a general <span class="equation">n</span> dimensions
+        <span class="numbered equation">
+            i_{\mathrm{ND}} = \sum_{d = 1}^{n}{ i_d \left(\prod_{d'=1}^{d-1}{ N_{d'}}\right)}
+        </span>
+        and therefore
+        <span class="numbered equation">
+            i_d = \left\lfloor \frac{i_{\mathrm{ND}}}{\prod_{d'=1}^{d-1} N_{d'}} \right\rfloor\ \mathrm{mod}\ N_d
+        </span>
+    </p>
+
+    <p>
+        These indexing relations can then be used to build derivatives
+        <span class="numbered equation" id="dfdx">
+            \frac{df}{dx}(x_i, y_j, z_k) = \sum_{i'=0}^{N_x-1} d_{ii'} f(x_{i'}, y_j, z_k) = \mathbf{D}_x \mathbf{V},
+        </span>
+        <span class="numbered equation">
+            \frac{df}{dy}(x_i, y_j, z_k) = \sum_{j'=0}^{N_y-1} d_{jj'} f(x_i, y_{j'}, z_k) = \mathbf{D}_y \mathbf{V},
+        </span>
+        <span class="numbered equation">
+            \frac{df}{dz}(x_i, y_j, z_k) = \sum_{k'=0}^{N_z-1} d_{kk'} f(x_i, y_j, z_{k'}) = \mathbf{D}_z \mathbf{V}.
+        </span>
+        A general element of the vector containing the derivative with respect to <span class="equation">x</span> has
+        the relation
+        <span class="numbered equation">
+            \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}}} = \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}(i,j,k)}}
+                = \sum_{i'_{3D}=0}^{N} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i'_\mathrm{3D}} f_{i'_\mathrm{3D}}
+                = \sum_{i'_{3D}=0}^{N} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i'_{\mathrm{3D}(i',j',k')}} f_{i'_\mathrm{3D}(i',j',k')}.
+        </span>
+        The sum on <span class="equation">i'_\mathrm{3D}(i',j',k')</span> can be replaced with a triple sum as
+        <span class="numbered equation">
+            \left( \frac{df}{dx}\right)_{i_{\mathrm{3D}(i,j,k)}}
+                = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
+        </span>
+        Using <a class="eqref" href="#dfdx">the equation above</a> to make a substitution on the left hand side of this
+        equation yields
+        <span class="numbered equation">
+            \sum_{i'=0}^{N_x} d_{ii'} f_{i_\mathrm{3D}(i',j,k)} = \sum_{i'=0}^{N_x-1} \sum_{j'=0}^{N_x-1} \sum_{k'=0}^{N_z-1} \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}} f_{i_\mathrm{3D}(i',j',k')}.
+        </span>
+        Since the coefficients of <span class="equation">f_{i_\mathrm{3D}(i',j',k')}</span> must vanish when
+        <span class="equation">j \ne j'</span> and <span class="equation">k \ne k'</span> we can use the Kronecker
+        delta to write
+        <span class="numbered equation">
+            \left( \mathbf{D}_x \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}\delta_{jj'}\delta_{kk'}.
+        </span>
+        By similar arguments the other derivatives can be shown to be
+        <span class="numbered equation">
+            \left( \mathbf{D}_y \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_z \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}\delta_{jj'}d_{kk'}.
+        </span>
+        and the second derivatives can shown to be
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xx} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d^2{}_{ii'}\delta_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xy} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}d_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{xz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = d_{ii'}\delta_{jj'}d_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{yy} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d^2{}_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \left( \mathbf{D}_{yz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+                = \delta_{ii'}d_{jj'}d_{kk'},
+        </span>
+        <eqn class="numbered equation">
+            \left( \mathbf{D}_{zz} \right)_{i_{\mathrm{3D}(i,j,k)} i_{\mathrm{3D}(i',j',k')}}
+            = \delta_{ii'}\delta_{jj'}d^2{}_{kk'}.
+        </eqn>
+    </p>
+
+    <p>
+        Expressions for generic dimensionality can also be provided. The derivative with respect to the <span
+            class="equation">j</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d_{i_j i'_j}\prod_{k \ne j} \delta_{i_k i'_k},
+        </span>
+        the second derivative with respect to the <span class="equation">j</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j x_j} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d^2_{i_j i'_j}\prod_{k \ne j} \delta_{i_k i'_k}
+        </span>
+        and the mixed derivative with respect to the <span class="equation">j</span>'th coordinate and the <span
+            class="equation">k</span>'th coordinate
+        <span class="numbered equation">
+            \left( \mathbf{D}_{x_j x_k} \right)_{i_{\mathrm{3D}\left(i_0,i_1,...,i_N\right)} i_{\mathrm{3D}\left(i'_0,i'_1,...,i'_N\right)}}
+                = d_{i_j i'_j}d_{i_k i'_k}\prod_{l \ne j, k} \delta_{i_l i'_l}.
+        </span>
+    </p>
+
+    <h2>Computational concerns</h2>
+
+    <p>
+        With the presence of the Kronecker delta terms in the multidimensional derivative matrices imply that those
+        matrices are in fact sparse. Because of this, it is computationally inefficient to compute them by looping over
+        each individual dimension's index. Instead, a single loop over the rows of the matrix can be performed and the
+        individual dimensional indices computed from the row index. Then an inner loop can be made over the dimensional
+        index of the coordinate being differentiated with respect to (or two loops over the indices of the indices of
+        the coordinates for mixed derivatives). The values of the primed indices are then equal to the unprimed indices
+        or the inner loop indices. These primed indices can be used to compute the primed column index. Then the
+        component of the matrix at that corresponding row and column index can be set to the value of the single
+        dimensional derivative matrix, second derivative matrix or product of matrix components for second derivatives.
+    </p>
+
+    <p>
+        Since the description of the computational procedure is somewhat vague, here is some javascript pseudocode.
+    </p>
+
+    <pre>
+        const N = [N_0, N_1, N_2, ..., N_n];  // N_i is the number of points in the i'th dimension
+        const d = [d_0, d_1, d_2, ..., d_n]; // d_i is the differential matrix for the i'th dimension.
+
+        function indices(i_nd, N) {
+            const indices = [];
+            var prod = 1;
+            for (var i = 0; i < N.length; i++) {
+                indices.push(Math.floor(i_nd / prod) % N[i]);
+                prod *= N[i];
+            }
+            return indices;
+        }
+
+        function i_nd(indices, N) {
+            var i_nd = 0;
+            var prod = 1;
+            for (var i = 0; i < N.length; i++) {
+                i_nd += indices[i] * prod;
+                prod *= N[i];
+            }
+            return i_nd;
+        }
+
+        function derivative(j, d, N) {
+            const N_nd = N.reduce((product, n) => product * n, 1);
+            const D = Array.from(new Array(N_nd), () => Array.from(new Array(N_nd), () => 0));
+            for (var iRow = 0; iRow < N_nd; iRow++) {
+                const i = indices(iRow, N);
+                const iPrime = i.slice()
+                for (var i_j = 0; i_j < N[j]; i_j++) {
+                    iPrime[j] = i_j;
+                    const iColumn = i_nd(iPrime, N);
+                    D[iRow][iColumn] = d[j][i[j]][iPrime[j]];
+                }
+            }
+            return D;
+        }
+    </pre>
+
+    <p>
+        In general, even computing the matrix <code>D</code> may be unnecessary. Generally, for solving partial
+        differential equations, the matrix will be a factor of a sub component and that block should be added to instead
+        of computing a separate matrix and adding it to the block.
+    </p>
+
+    <h2>Boundary conditions</h2>
+
+    <p>
+        The value of the function or its derivative on the boundary can be considered as a special case of
+        interpolation. For some discretizations (finite difference, Chebyshev-Gauss) the actual boundary points are
+        coincident with the first and last collocation points, while for other discretizations (Legendre,
+        Chebyshev-Lobatto) the boundary points are not coincident with the collocation points and must be truly
+        extrapolated. For orthogonal basis function discretizations, the interpolation is carried out as a sum over all
+        collocation points in the coordinate being extrapolated (the other coordinate collocations can generally be
+        used) for example:
+
+        <span class="numbered equation">
+            f(x_i, 0, z_k) = \sum_{j=0}^{N_y} p_j f(x_i, y_j, z_k).
+        </span>
+    </p>
+
+    <p>
+        Derivatives can be computed in a similar fashion, using the above expansions
+        <span class="numbered equation">
+            \frac{\partial f}{\partial x}(x_i, 0, z_k) = \sum_{j=0}^{N_y} \sum_{i'=0}^{N_x} p_j d_{ii'} f(x_{i'}, y_j, z_k).
+        </span>
+        Excluding the function values, the factors inside of the sums can be considered as a row vector. The row vector
+        may be considered to have row index <span class="equation">i_\mathrm{3D}(i,0,k)</span>.
+    </p>
+
+    <p>
+        It is  possible to treat the row vector <span class="equation">p_j</span> instead as a projection operator, of
+        which the <span class="equation">y=0</span> boundary is the first and only row:
+        <span class="numbered equation">
+            f(x_i, y_j, z_k) = f_{i_\mathrm{3D}(i, j, k)} = \mathbf{P_y} \mathbf{V}
+                = \sum_{i'_\mathrm{3D}=0}^N (P_y)_{i_\mathrm{3D} i'_\mathrm{3D}} V_{i'_\mathrm{3D}}.
+        </span>
+        Following the same derivation as for the derivative operators, the projection operators will have the following
+        forms:
+        <span class="numbered equation">
+            \mathbf{P}_x = p_{i'}\delta_{jj'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \mathbf{P}_y = \delta_{ii'}p_{j'}\delta_{kk'},
+        </span>
+        <span class="numbered equation">
+            \mathbf{P}_z = \delta_{ii'}\delta_{jj'}p_{k'}.
+        </span>
+        Note that projecting derivatives onto the boundaries is not problematic,
+        <span class="numbered equation">
+            \mathbf{P}_x\mathbf{D}_y = p_{i'}d_{jj'}\delta_{kk'},
+        </span>
+        but there may be a vector-matrix
+        multiplication if the derivative is with respect to the coordinate being extrapolated on
+        <span class="numbered equation">
+            \mathbf{P}_x\mathbf{D}_x = \left(\sum_{i=0}^{N_x} p_{i}d_{ii'}\right)\delta_{jj'}\delta_{kk'}.
+        </span>
+    </p>
+</div>
+
+<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<div th:fragment="specific-js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+            integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+            crossorigin="anonymous"
+            th:src="@{/webjars/katex/0.7.1/dist/katex.min.js}"></script>
+    <script src="../../static/js/equations.js"
+            th:src="@{/js/equations.js}"></script>
+</div>
+</body>
+</html>

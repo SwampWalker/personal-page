@@ -1,5 +1,6 @@
 package ca.tonita;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -21,5 +22,15 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(new BaseTemplateInterceptor());
+    }
+
+    @Bean
+    public KatexProcessor katexProcessor() {
+        return new KatexProcessor();
+    }
+
+    @Bean
+    public ThymeleafKatexEquationProcessor ThymeleafKatexEquationProcessor(KatexProcessor katexProcessor) {
+        return new ThymeleafKatexEquationProcessor(katexProcessor);
     }
 }

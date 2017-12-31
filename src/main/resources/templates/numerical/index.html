@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring4-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Numerical methods articles</title>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Numerical methods articles</h1>
+
+    <p>
+        Here I collect a number of articles that I write on topics related to numerical methods. It is likely that more
+        complete treatises on the topics can be found elsewhere, but mostly this serves as a collection of notes for
+        myself.
+    </p>
+
+    <div th:replace="links :: links"></div>
+</div>
+
+</body>
+</html>

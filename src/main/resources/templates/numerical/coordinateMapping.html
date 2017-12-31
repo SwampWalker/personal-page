@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Coordinate mappings</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css"
+          integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0"
+          crossorigin="anonymous"
+          th:href="@{/webjars/katex/0.7.1/dist/katex.min.css}">
+    <link href="../../static/css/tonita.css"
+          th:href="@{/css/tonita.css}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<div class="container" th:fragment="content">
+    <h1>Coordinate mappings</h1>
+    <p>
+        It is often not the case that the natural collocation points of a discretization scheme will map out the actual
+        domain of the problem to be solved. While the choice of the Legendre polynomials will naturally map onto the
+        <span class="equation">\theta</span> coordinate in axial coordinates, any choice for the radial discretization
+        will not cover the entirety of <span class="equation">[0, \infty)</span>. Moreover, for free boundary value
+        problems, the actual domain may be unknown and the mapping may depend on the solution to the problem.
+    </p>
+
+    <p>
+        One solution is always to transform the system of equations to be solved by a change of coordinates. An
+        alternate approach is to algorithmically include in the numerical solver knowledge of the coordinate mapping.
+        This approach has the benefit of being able to quickly adapt different choices of the discretization and
+        mapping. The numerical algorithm needs to expand derivatives of the system of equations via the chain rule.
+    </p>
+
+    <p>
+        In what follows, primed coordinates <span class="equation">x'</span> will be used to refer to the coordinates
+        spanning the discretizations natural domain while unprimed coordinates <span class="equation">x</span> will
+        span the physical coordinates of the problem being solved. Multiple dimensions will be illustrated via indices
+        <span class="equation">x^i</span> with the index running from <span class="equation">0 ... d</span> .
+    </p>
+
+    <h2>Basic quantities</h2>
+
+    <p>
+        The basic expansion of partial derivatives follows from application of the chain rule:
+        <span class="numbered equation">
+            \frac{\partial u }{\partial x^i} = \sum_{k=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial u }{\partial x'{}^k}.
+        </span>
+        The second derivative follows by subsequent expansions of the chain rule
+        <span class="numbered equation">
+            \frac{\partial^2 u }{\partial x^i\partial x^j} = \frac{\partial}{\partial x^j} \left(
+            \sum_{k=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial u }{\partial x'{}^k}\right)
+        </span>
+        followed by application of the product rule
+        <span class="numbered equation">
+            \frac{\partial^2 u }{\partial x^i\partial x^j} = \sum_{k=0}^d \left(
+                \frac{\partial^2 x'{}^k}{\partial x^i \partial x^j}\frac{\partial u }{\partial x'{}^k}
+                + \frac{\partial x'{}^k}{\partial x^i}\frac{\partial}{\partial x^j}\frac{\partial u }{\partial x'{}^k}
+            \right)
+        </span>
+        arriving at the final expansion
+        <span class="numbered equation">
+            \frac{\partial^2 u }{\partial x^i\partial x^j} =
+                \sum_{k=0}^d \frac{\partial^2 x'{}^k}{\partial x^i \partial x^j}\frac{\partial u }{\partial x'{}^k}
+                + \sum_{k=0}^d \sum_{l=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial x'{}^l}{\partial x^j}\frac{\partial^2 u }{\partial x'{}^k\partial x'{}^l}.
+        </span>
+    </p>
+
+    <h2>Matrix form of differential operators</h2>
+
+    <p>
+        In constructing the Jacobian of the system of equations, coefficients multiplied by the base derivative
+        operators get embedded into the overall matrix (see <a href="/templates/multidimensionalIndexing.html">
+        multidimensional indexing</a>). These differential operators can be represented (for a single field) as
+        <span class="equation">\mathbf{D}_i</span> in the physical coordinates and <span class="equation">
+        \mathbf{D'}_{i}</span> in the discrete coordinates. The discrete operators are known and the physical operators
+        can be derived from the above expansions.
+    </p>
+
+    <p>
+        The single derivative operator is
+        <span class="numbered equation">
+            \mathbf{D}_i = \sum_{k=0}^d \frac{\partial x'{}^k}{\partial x^i} \mathbf{D'}_{k}.
+        </span>
+        while the second derivative operator is
+        <span class="numbered equation">
+            \mathbf{D}_{ij} =
+                \sum_{k=0}^d \frac{\partial^2 x'{}^k}{\partial x^i \partial x^j}\mathbf{D'}_{k}
+                + \sum_{k=0}^d \sum_{l=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial x'{}^l}{\partial x^j}\mathbf{D'}_{kl}.
+        </span>
+    </p>
+</div>
+
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"
+        th:src="@{/webjars/jquery/3.2.1/dist/jquery.min.js}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"
+        th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<div th:fragment="specific-js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"
+            integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1"
+            crossorigin="anonymous"
+            th:src="@{/webjars/katex/0.7.1/dist/katex.min.js}"></script>
+    <script>
+    </script>
+    <script src="../../static/js/equations.js"
+            th:src="@{/js/equations.js}"></script>
+</div>
+</body>
+</html>

@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by Aaryn Tonita on 2016-01-02.
  */
 @Controller
-@RequestMapping("/{subject:math|physics}")
+@RequestMapping("/{subject:numerical|physics}")
 public class StaticBlog {
 
     private Map<String, List<LinkData>> links = subjects();
@@ -35,21 +35,25 @@ public class StaticBlog {
 
     private Map<String, List<LinkData>> subjects() {
         Map<String, List<LinkData>> subjects = new HashMap<>();
-        subjects.put("math", mathTopics());
+        subjects.put("numerical", mathTopics());
         subjects.put("physics", physicsTopics());
         return subjects;
     }
 
     private static List<LinkData> mathTopics() {
         ArrayList<LinkData> links = new ArrayList<>();
-        links.add(new LinkData().setAddress("math/pseudospectral.html")
+        links.add(new LinkData().setAddress("numerical/pseudospectral.html")
                 .setTitle("Pseudospectral methods")
                 .setDescription("A high level presentation of Chebyshev polynomials and their use in solving PDEs" +
                         " through Pseudospectral methods"));
-        links.add(new LinkData().setAddress("math/multiDimensionalIndexing.html")
+        links.add(new LinkData().setAddress("numerical/multiDimensionalIndexing.html")
                 .setTitle("Multidimensional indexing and differential matrix structure")
                 .setDescription("An outline of a particular strategy for multidimensional indexing of discrete fields" +
                         " and the structure of the resulting differential matrices."));
+        links.add(new LinkData().setAddress("numerical/coordinateMapping.html")
+                .setTitle("Coordinate mappings")
+                .setDescription("Derivation of factor expansions for numerical problems when the underlying discrete" +
+                        " coordinates are mapped via complex functions onto the physical coordinates."));
         return links;
     }
 
