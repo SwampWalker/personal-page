@@ -35,13 +35,19 @@
 
     <p>
         The stress energy tensor is derived from the above metric and the normal stress energy tensor for a perfect
-        fluid
+        fluid, given in terms of the total energy density of the fluid <span class="equation">\rho</span>, the pressure
+        <span class="equation">p</span> and the four velocity of the fluid element <span class="equation">u^a</span>:
         <span class="numbered equation">
-            T_{ab} = \rho u_au_b + P\left(u_au_b + g_{ab} \right)
+            T_{ab} = \rho u_au_b + p\left(u_au_b + g_{ab} \right)
         </span>
-        In a static spacetime, the four velocity of the fluid follows the integral curves of the time coordinate
+        In a static spacetime with the metric above, the four velocity of the fluid follows the integral curves of the
+        time coordinate
         <span class="numbered equation">
-            u^a = e^{-\Phi(r)}\partial_t \equiv \left(e^{-\Phi(r)},0,0,0 \right)
+            u^\mu = e^{-\Phi(r)}\partial_t \equiv \left(e^{-\Phi(r)},0,0,0 \right)
+        </span>
+        or as a 1-form
+        <span class="numbered equation">
+            u_\mu = -e^{\Phi(r)}dt \equiv \left(-e^{\Phi(r)},0,0,0 \right)
         </span>
         Therefore, the stress energy tensor is given in terms of the variables as
         <span class="numbered equation">
@@ -57,12 +63,8 @@
         </span>
         and
         <span class="numbered equation">
-            \frac{d\Phi}{dr}=\frac{m + 4 \pi r^3 P}{r^2 - 2 r m}
+            \frac{d\Phi}{dr}=\frac{m + 4 \pi r^3 p}{r^2 - 2 r m}
         </span>
-        The mass equation is quite sensible: since the mass variable equals the Schwarzschild variable outside of the
-        star, the mass variable can be interpreted as the total energy inside of a given radius. Sensibly, to compute
-        the total energy the matter energy density must be integrated. I personally can make no intuitive sense of the
-        equation for the lapse variable.
     </p>
 
     <h2>Conservation of stress energy</h2>
@@ -70,35 +72,120 @@
     <p>
         The divergence of the stress energy can be readily computed from the mixed form of the stress energy tensor
         <span class="numbered equation">
-            \nabla_b T_a{}^b = \nabla_b \left(\rho u_a u^b + P(u_a u^b + \delta_a{}^b)\right)
+            \nabla_b T_a{}^b = \nabla_b \left(\rho u_a u^b + p(u_a u^b + \delta_a{}^b)\right)
         </span>
         This equation can be expanded and the covariant derivatives of scalar fields replaced with partial derivatives
         to yield
         <span class="numbered equation">
-            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + P) + (\rho + P)\nabla_b u_a u^b + \partial_a P
+            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + p) + (\rho + p)\nabla_b u_a u^b + \partial_a p
         </span>
         Next the covariant derivatives can be expanded in place of their definitions in terms of the Christoffel
         symbols
         <span class="numbered equation">
-            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + P) +
-            (\rho + P) \left(\partial_b u_a u^b - \Gamma^c{}_{ab} u_c u^b + \Gamma^b{}_{bc} u_a u^c\right) + \partial_a P
+            \nabla_b T_a{}^b = u_a u^b \partial_b (\rho  + p) +
+            (\rho + p) \left(\partial_b u_a u^b - \Gamma^c{}_{ab} u_c u^b + \Gamma^b{}_{bc} u_a u^c\right) + \partial_a p
         </span>
         For the TOV equations, the only non-vanishing part of the four-velocity is the <span class="equation">t</span>
         component, while the only variable that the fields depend upon is <span class="equation">r</span>. This leaves
         the following equation
         <span class="numbered equation">
-            \partial_r P - (\rho  + P) \Gamma^t{}_{rt} u_t u^t + (\rho  + P) \Gamma^\mu{}_{\mu t} u_t u^t = 0
+            \partial_r p - (\rho  + p) \Gamma^t{}_{rt} u_t u^t + (\rho  + p) \Gamma^\mu{}_{\mu t} u_t u^t = 0
         </span>
         Here the multiplication of the covariant and contravariant component of the four velocity yield <span
             class="equation">-1</span> simplifying the expression to
         <span class="numbered equation">
-            \partial_r P + (\rho  + P) \Gamma^t{}_{rt} - (\rho  + P) \Gamma^b{}_{bt} = 0
+            \partial_r p + (\rho  + p) \Gamma^t{}_{rt} - (\rho  + p) \Gamma^b{}_{bt} = 0
         </span>
         The only non-vanishing Christoffel symbol is the <span class="equation">{t,r,t}</span> component (equal to the
         radial derivative of the lapse field phi), so the equation for hydrostatic equilibrium is
         <span class="numbered equation">
-            \frac{dP}{dr} = -(\rho + P) \frac{d\Phi}{dr} = -(\rho + P) \frac{m + 4 \pi r^3 P}{r^2 - 2 r m}.
+            \frac{dP}{dr} = -(\rho + p) \frac{d\Phi}{dr} = -(\rho + p) \frac{m + 4 \pi r^3 p}{r^2 - 2 r m}.
         </span>
+    </p>
+
+    <h2>Boundary conditions</h2>
+
+    <p>
+        The problem of solving the forgoing equations for a spherical star defines a free boundary problem, where the
+        radius of the star is unknown. The inner boundary conditions for <span class="equation">m</span> and
+        <span class="equation">p</span> are straightforward for an initial value problem, while the boundary condition
+        for <span class="equation">\Phi</span> arises by requiring that at the surface of the star
+        <span class="equation">r_s</span> the metric matches the Schwarzschild metric:
+
+        <span class="numbered equation">
+            m(0) = 0,
+        </span>
+        <span class="numbered equation">
+            p(0) = p_c,
+        </span>
+        <span class="numbered equation">
+            p(r_s) = 0,
+        </span>
+        <span class="numbered equation" id="phi_surface_bc">
+            \Phi(r_s) = \frac{1}{2} \ln \left( 1 - \frac{ 2 m(r_s) }{ r_s } \right).
+        </span>
+
+        The central pressure <span class="equation">p_c</span> is a free parameter of the problem.
+        If solving the equations using integration from <span class="equation">r = 0 \rightarrow r_s</span> it is
+        easier to solve with
+        <span class="numbered equation">
+            \Phi(0) = 0
+        </span>
+        and integrate the entire solution and then find a constant value which can be added to
+        <span class="equation">\Phi</span> to satisfy <a class="eqref" href="#phi_surface_bc">the surface
+        boundary condition</a>.
+    </p>
+
+    <h2>Equations of state</h2>
+
+    <p>
+        Realistic equations of state are research problems in and of themself and generally result in tables (often
+        requiring ad hoc "smoothing" treatments). There are however two common closed form equations of state used in
+        structural studies.
+    </p>
+
+    <p>
+        The first closed form equation of state is the simplest, the constant density equation of state. For this
+        equation of state, the total energy density is constant and not a function of pressure or radius
+        <span class="numbered equation">
+            \rho(p) = \rho_c.
+        </span>
+    </p>
+
+    <p>
+        The second closed form equation of state is known as the polytropic equation of state. It is usually given in
+        two parts, first the adiabatic pressure term
+        <span class="numbered equation">
+            p = K (m_b n)^\gamma = K \rho_0{}^\gamma
+        </span>
+        with <span class="equation">m_b</span> the average rest mass per particle (baryon),
+        <span class="equation">n</span> the number density of particles, <span class="equation">\rho_0</span> the rest
+        mass density, and <span class="equation">K</span> and <span class="equation">\gamma</span> are constants.
+        The second term is the ideal gas relation for the specific internal energy,
+        <span class="numbered equation">
+            \epsilon = \frac{p}{\rho_0(1 - \gamma)}
+        </span>
+        which gives the relation for the total energy density
+        <span class="numbered equation">
+            \rho = \rho_0(1 + \epsilon) = \rho_0 + \frac{K \rho_0{}^\gamma}{\gamma - 1}.
+        </span>
+        This latter relation can also be derived from the first law of thermodynamics for an adiabatic fluid
+        <span class="numbered equation">
+            d\left(\frac{\rho}{\rho_0}\right) = -Pd\left(\frac{1}{\rho_0}\right)
+        </span>
+        by choosing the constant of integration properly (by requiring
+        <span class="equation">\lim_{\rho_0 \rightarrow 0} \rho / \rho_0 = 1</span>).
+    </p>
+
+    <h2>References</h2>
+
+    <p>
+        The straightforward derivation of the equations can also be found in
+        <cite data-authors="Stuart L. Shapiro, Saul A. Teukolsky" data-section="5.7">
+            Black Holes, White Dwarfs and Neutron Stars
+        </cite>.
+        However, they use an exponential term for the radial part of the initial metric before making a change of
+        variables to the mass potential. Here the mass potential is used from the beginning.
     </p>
 </div>
 
