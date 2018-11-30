@@ -35,7 +35,7 @@
 
     <p>
         In what follows, primed coordinates <span class="equation">x'</span> will be used to refer to the coordinates
-        spanning the discretizations natural domain while unprimed coordinates <span class="equation">x</span> will
+        spanning the discretization's natural domain while unprimed coordinates <span class="equation">x</span> will
         span the physical coordinates of the problem being solved. Multiple dimensions will be illustrated via indices
         <span class="equation">x^i</span> with the index running from <span class="equation">0 ... d</span> .
     </p>
@@ -89,6 +89,106 @@
                 \sum_{k=0}^d \frac{\partial^2 x'{}^k}{\partial x^i \partial x^j}\mathbf{D'}_{k}
                 + \sum_{k=0}^d \sum_{l=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial x'{}^l}{\partial x^j}\mathbf{D'}_{kl}.
         </span>
+    </p>
+
+    <h2>Free boundaries, variable coordinates</h2>
+
+    <p>
+        Some particular problems classify as free boundary value problems. Especially problems involving stellar
+        surfaces, one of the unknowns of the problem is the actual location of the surface. This surface will be
+        important if one wants to split the domains into an interior and exterior and solve for the smooth fields in
+        either domain. Constants or entire functions may need to be introduced to solve for the surface. In general
+        it is tedious to rewrite the differential equations in terms of the discrete coordinates as above, so the
+        coordinates themselves become functions of the constants so introduced and derivatives of functions are also
+        dependent on these mapping unknowns. However, the Jacobians for these constants can be computed from the
+        existing
+        jacobians with respect to field derivatives and additional Jacobians involving the coordinates themselves.
+    </p>
+
+    <p>
+        Specifically, for a differential equation <span class="equation">\mathcal{F} = 0</span>, the Jacobian can be
+        expanded symbolically as
+        <span class="numbered equation">
+            \frac{\partial \mathcal{F}}{\partial c_x} =
+                \sum_{i=0}^d \sum_{j=i}^d \frac{\partial \mathcal{F}}{\partial \frac{\partial^2 u}{\partial x^i \partial x^j}} \frac{\partial^3 u }{\partial x^i \partial x^j\partial c_x}
+                + \sum_{i=0}^d \frac{\partial \mathcal{F}}{\partial \frac{\partial u}{\partial x^i}} \frac{\partial^2 u }{\partial x^i\partial c_x}
+                + \sum_{i=0}^d \frac{\partial \mathcal{F}}{\partial x^i} \frac{\partial x^i}{\partial c_x}.
+        </span>
+        The term <span class="equation">\frac{\partial x^i}{\partial c_x}</span> is a function of the mapping, but the
+        higher derivatives can be further expanded. Derivatives of fields will themselves be computed according to the
+        rules described above. In those terms, only the coordinate derivatives will depend on the mapping variables. So
+        for the second derivative term,
+        <span class="numbered equation">
+            \frac{\partial}{\partial c_x} \frac{\partial u }{\partial x^i} =
+                \frac{\partial}{\partial c_x} \left( \sum_{k=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial u }{\partial x'{}^k} \right) =
+                \sum_{k=0}^d \frac{\partial^2 x'{}^k}{\partial x^i \partial c_x} \frac{\partial u }{\partial x'{}^k}
+        </span>
+        while the third derivative term becomes
+        <span class="numbered equation">
+            \frac{\partial}{\partial c_x} \frac{\partial^2 u }{\partial x^i\partial x^j} =
+                \frac{\partial}{\partial c_x} \left( \sum_{k=0}^d \frac{\partial^2 x'{}^k}{\partial x^i \partial x^j}\frac{\partial u }{\partial x'{}^k}
+                    + \sum_{k=0}^d \sum_{l=0}^d \frac{\partial x'{}^k}{\partial x^i}\frac{\partial x'{}^l}{\partial x^j}\frac{\partial^2 u }{\partial x'{}^k\partial x'{}^l} \right) =
+                \sum_{k=0}^d \frac{\partial^3 x'{}^k}{\partial x^i \partial x^j \partial c_x}\frac{\partial u }{\partial x'{}^k}
+                    + \sum_{k=0}^d \sum_{l=0}^d \left( \frac{\partial x'{}^k}{\partial x^i}\frac{\partial^2 x'{}^l}{\partial x^j \partial c_x} + \frac{\partial^2 x'{}^k}{\partial x^i \partial c_x}\frac{\partial x'{}^l}{\partial x^j}\right)\frac{\partial^2 u }{\partial x'{}^k\partial x'{}^l}.
+        </span>
+    </p>
+
+    <h3>Example: linear (affine) mapping</h3>
+
+    <p>
+        A simple yet useful mapping is a linear mapping with variable end points (taking a, for me, canonical domain of
+        <span class="equation"> [-1, 1]</span>):
+
+        <span class="numbered equation">
+            [-1, 1] \rightarrow [a, b].
+        </span>
+
+        The following formula provides the mapping,
+
+        <span class="numbered equation">
+            x_i = \frac{b_i - a_i}{2} x_i' + \frac{a_i + b_i}{2},
+        </span>
+
+        and the following provides the inverse
+
+        <span class="numbered equation">
+            x_i' = \frac{2}{b_i - a_i} x_i - \frac{a_i + b_i}{b_i - a_i},
+        </span>
+    </p>
+
+    <p>
+        The derivatives are straightforward:
+        <span class="numbered equation">
+            \frac{\partial x'{}^i}{\partial x^j} = \frac{2}{b_i - a_i} \delta^i{}_j,
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial x^i}{\partial a_i} = \frac{1 - x_i'}{2},
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial x^i}{\partial b_i} = \frac{1 + x_i'}{2},
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial^2 x'{}^i}{\partial x^j \partial x^k} = 0,
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial^2 x'{}^i}{\partial x^j \partial a_i} = \frac{2}{\left(b_i - a_i\right)^2} \delta^i{}_j,
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial^2 x'{}^i}{\partial x^j \partial b_i} = -\frac{2}{\left(b_i - a_i\right)^2} \delta^i{}_j,
+        </span>
+
+        <span class="numbered equation">
+            \frac{\partial^3 x'{}^i}{\partial x^j \partial x^k \partial a_i} = \frac{\partial^3 x'{}^i}{\partial x^j \partial x^k \partial b_i} = 0.
+        </span>
+
+        These quantities allow one to compute derivatives of fields with respect to physical coordinates, given the
+        derivatives with respect to discrete coordinates and allows one to compute jacobians of the differential
+        equations with respect to the unknown values of the endpoints.
     </p>
 </div>
 
