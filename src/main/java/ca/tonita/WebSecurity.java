@@ -1,6 +1,7 @@
 package ca.tonita;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
         http.addFilterAfter(getLogoutFilter(), CsrfFilter.class);
-        Logger.getLogger(WebSecurity.class).info("Configured HttpSecurity.");
+        LoggerFactory.getLogger(WebSecurity.class).info("Configured HttpSecurity.");
     }
 
     public LogoutFilter getLogoutFilter() {
@@ -57,6 +58,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth
                 .inMemoryAuthentication()
                 .withUser("root").password("root").roles("ADMIN");
-        Logger.getLogger(WebSecurity.class).info("Configured AuthenticationManagerBuilder.");
+        LoggerFactory.getLogger(WebSecurity.class).info("Configured AuthenticationManagerBuilder.");
     }
 }
